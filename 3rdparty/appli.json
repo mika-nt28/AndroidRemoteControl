@@ -154,5 +154,13 @@
 		"subtype": "other",
 		"categorie": "appli",
 		"commande": ""
+	},
+	{
+		"name": "Freebox by Oqee",
+		"icon": freeboxtv.jpg",
+		"type": "action",
+		"subtype": "other",
+		"categorie": "appli",
+		"commande": "am start -n net.oqee.androidtv/.ui.main.MainActivity"
 	}
 ]
