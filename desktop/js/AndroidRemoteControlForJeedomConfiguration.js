@@ -1,6 +1,6 @@
 $(document).ready(function () {
-       $('#show-nextdom-modal').click(function() {
-        showModal('Informations', 'nextdom');
+       $('#show-jeedom-modal').click(function() {
+        showModal('Informations', 'jeedom');
         return false;
     });
 });
@@ -10,5 +10,5 @@ function showConfigModal() {
 function showModal(title, modalName) {
     var modal = $('#md_modal');
     modal.dialog({title: title});
-    modal.load('index.php?v=d&plugin=AndroidRemoteControl&modal='+modalName+'.AndroidRemoteControl').dialog('open');
+    modal.load('index.php?v=d&plugin=AndroidTV&modal='+modalName+'.AndroidTV').dialog('open');
 }
