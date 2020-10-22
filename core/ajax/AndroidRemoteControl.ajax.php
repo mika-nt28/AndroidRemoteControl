@@ -10,15 +10,15 @@ try {
         $ipaddress = init('params');
 
 	if (init('action') == 'connect') {
-            	log::add('AndroidRemoteControl', 'debug', 'connection encours a ' . $ipaddress);
+            	log::add('AndroidTV', 'debug', 'connection encours a ' . $ipaddress);
 
-      	AndroidRemoteControl::connectADB($ipaddress);
+      	AndroidTV::connectADB($ipaddress);
       			ajax::success();
     }
 
     if (init('action') == 'resetADB') {
-            	log::add('AndroidRemoteControl', 'debug', '==== reset encours ====');
-      	AndroidRemoteControl::resetADB();
+            	log::add('AndroidTV', 'debug', '==== reset encours ====');
+      	AndroidTV::resetADB();
       			ajax::success();
     }
 
