@@ -2,7 +2,7 @@
 	if (!isConnect('admin')) {
 		throw new Exception('{{401 - Accès non autorisé}}');
 	}
-	$plugin = plugin::byId('AndroidRemoteControl');
+	$plugin = plugin::byId('AndroidTV');
 	sendVarToJS('eqType', $plugin->getId());
 	$eqLogics = eqLogic::byType($plugin->getId());
 ?>
@@ -214,6 +214,6 @@
 	</div>
 </div>
 <?php 
-include_file('desktop', 'AndroidRemoteControl', 'js', 'AndroidRemoteControl');
+include_file('desktop', 'AndroidTV', 'js', 'AndroidTV');
 include_file('core', 'plugin.template', 'js'); 
 ?>
