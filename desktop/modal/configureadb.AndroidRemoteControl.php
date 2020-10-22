@@ -36,7 +36,7 @@ if (!isConnect('admin')) {
                     <div class="form-group">
                         <center><label class="control-label">{{Pour identifier l'adresse IP de votre périphérique Android,</br>Aller dans "Menu", cliquer sur "Status"}}</label></center>
                         <input id="ip_address_found" type="text" required="required" class="form-control stepwizard-input" placeholder="192.168.1.XXX" />
-                        <center><img src="plugins/AndroidRemoteControl/desktop/images/IP_status_setp1.png" /></center>
+                        <center><img src="plugins/AndroidTV/desktop/images/IP_status_setp1.png" /></center>
                     </div>
                     <button id="toStep2" class="btn btn-primary nextBtn btn-lg pull-right" type="button" ><i class="fa fa-fast-forward"></i> {{Suivant}}</button>
             </div>
@@ -46,7 +46,7 @@ if (!isConnect('admin')) {
                     <center><h3>{{Activer le mode Développeur}}</h3></center></br>
                     <div class="form-group">
                         <center><label class="control-label">{{Aller dans le menu "About" - Cliquer plusieurs fois sur "Build"}}</label></center>
-                        <center><img src="plugins/AndroidRemoteControl/desktop/images/About_Build_step2.png"/></center>
+                        <center><img src="plugins/AndroidTV/desktop/images/About_Build_step2.png"/></center>
                     </div>
                     <button id="toStep3" class="btn btn-primary nextBtn btn-lg pull-right" type="button" ><i class="fa fa-fast-forward"></i> {{Suivant}}</button>
             </div>
@@ -56,7 +56,7 @@ if (!isConnect('admin')) {
                     <center><h3>{{Activer le mode Debug}}</h3></center></br>
                     <div class="form-group">
                         <center><label class="control-label">{{Aller dans le menu "System - Cliquer sur "Developer options"}}</label></center>
-                        <center><img src="plugins/AndroidRemoteControl/desktop/images/Developer_Options_step3.png"/></center>
+                        <center><img src="plugins/AndroidTV/desktop/images/Developer_Options_step3.png"/></center>
                     </div>
                     <button id="toStep4" class="btn btn-primary nextBtn btn-lg pull-right" type="button" ><i class="fa fa-fast-forward"></i> {{Suivant}}</button>
             </div>
@@ -66,7 +66,7 @@ if (!isConnect('admin')) {
                     <center><h3>{{Activer le mode Debug}}</h3></center></br>
                     <div class="form-group">
                         <center><label class="control-label">{{Cliquer sur "USB debugging"}}</label></center>
-                        <center><img src="plugins/AndroidRemoteControl/desktop/images/USB_Debugging_step4.png"/></center>
+                        <center><img src="plugins/AndroidTV/desktop/images/USB_Debugging_step4.png"/></center>
                     </div>
                     <button id="toStep5" class="btn btn-primary nextBtn btn-lg pull-right" type="button" ><i class="fa fa-fast-forward"></i> {{Suivant}}</button>
             </div>
@@ -76,7 +76,7 @@ if (!isConnect('admin')) {
                     <center><h3>{{Enregistrer la connexion}}</h3></center></br>
                     <div class="form-group">
                         <center><label class="control-label">{{Cliquer sur "Always allow from this computer" puis sur "OK"}}</label></center>
-                        <center><img src="plugins/AndroidRemoteControl/desktop/images/Allow_stepFinal.png"/></center>
+                        <center><img src="plugins/AndroidTV/desktop/images/Allow_stepFinal.png"/></center>
                     </div>
                     <button id="closeConfigureAdb" class="btn btn-primary nextBtn btn-lg pull-right ui-icon-closethick" type="button" >{{Terminer}}</button>
             </div>
@@ -84,5 +84,5 @@ if (!isConnect('admin')) {
     </form>
 </div>
 
-<?php include_file('desktop', 'configureadb.AndroidRemoteControl', 'js', 'AndroidRemoteControl');?>
-<?php include_file('desktop', 'configureadb.AndroidRemoteControl', 'css', 'AndroidRemoteControl');?>
+<?php include_file('desktop', 'configureadb.AndroidTV', 'js', 'AndroidTV');?>
+<?php include_file('desktop', 'configureadb.AndroidTV', 'css', 'AndroidTV');?>
