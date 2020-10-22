@@ -2,12 +2,12 @@ $("#table_cmd").sortable({axis: "y", cursor: "move", items: ".cmd", placeholder:
 $("#table_app").sortable({axis: "y", cursor: "move", items: ".app", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true});
 $("#bt_serviceLog").click(function(){
   	$('#md_modal').dialog({title: "{{Logs}}"});
-  	$('#md_modal').load('index.php?v=d&plugin=AndroidRemoteControl&modal=log.AndroidRemoteControl').dialog('open');
+  	$('#md_modal').load('index.php?v=d&plugin=AndroidTV&modal=log.AndroidTV').dialog('open');
 });
 
 $("#bt_configureAdb").click(function(){
   	$('#md_modal').dialog({title: "{{Configuration de votre appareil Android}}"});
-  	$('#md_modal').load('index.php?v=d&plugin=AndroidRemoteControl&modal=configureadb.AndroidRemoteControl').dialog('open');
+  	$('#md_modal').load('index.php?v=d&plugin=AndroidTV&modal=configureadb.AndroidTV').dialog('open');
 });
 function addCmdToTable(_cmd) {
     if (!isset(_cmd)) {
@@ -56,7 +56,7 @@ function addCmdToTable(_cmd) {
     }else if (_cmd.configuration.categorie == "appli") {
         var tr = '<tr class="cmd" data-cmd_id="' + init(_cmd.id) + '">';
         tr += '<td style="width: 60px;">';
-        tr += '<img src="plugins/AndroidRemoteControl/desktop/images/'+ _cmd.configuration.icon +'" style="width:30px"; height:"30px"></a>';
+        tr += '<img src="plugins/AndroidTV/desktop/images/'+ _cmd.configuration.icon +'" style="width:30px"; height:"30px"></a>';
         tr += '</td>';
         tr += '<td style="width: 400px;">';
         tr += '<span class="cmdAttr" data-l1key="id" style="display:none;"></span>';
@@ -91,7 +91,7 @@ function addCmdToTable(_cmd) {
     }else{
          var tr = '<tr class="cmd" data-cmd_id="' + init(_cmd.id) + '">';
         tr += '<td style="width: 60px;">';
-        tr += '<img src="plugins/AndroidRemoteControl/desktop/images/unknown.png" style="width:30px"; height:"30px"></a>';
+        tr += '<img src="plugins/AndroidTV/desktop/images/unknown.png" style="width:30px"; height:"30px"></a>';
         tr += '</td>';
         tr += '<td style="width: 400px;">';
         tr += '<span class="cmdAttr" data-l1key="id" style="display:none;"></span>';
