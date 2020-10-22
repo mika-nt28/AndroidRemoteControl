@@ -18,8 +18,8 @@ $ip_address = init('ip');
   
 <script>
 $(document).ready(function() {
-<?php shell_exec("sudo adb -s $ip_address:5555 shell screencap -p > /var/www/html/plugins/AndroidRemoteControl/3rdparty/screencap$id.png"); ?>
-$('#image').html('<img src="/plugins/AndroidRemoteControl/3rdparty/screencap<?php echo  $id ?>.png">');
+<?php shell_exec("sudo adb -s $ip_address:5555 shell screencap -p > /var/www/html/plugins/AndroidTV/3rdparty/screencap$id.png"); ?>
+$('#image').html('<img src="/plugins/AndroidTV/3rdparty/screencap<?php echo  $id ?>.png">');
 
 });
 </script>
