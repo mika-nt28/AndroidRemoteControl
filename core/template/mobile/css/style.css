@@ -1,4 +1,4 @@
-.AndroidRemoteControl .previous{
+.AndroidTV .previous{
     margin-top: 7%;
     height: 50%;
     -ms-transform: rotate(180deg);
@@ -9,14 +9,14 @@
     cursor: pointer;
     opacity: 0.5;
 }
-.AndroidRemoteControl .bouton_bas{
+.AndroidTV .bouton_bas{
     height: 50%;
     margin-left: 0.1em;
     margin-right: 0.1em;
     cursor: pointer;
     opacity: 0.5;
 }
-.AndroidRemoteControl .bouton_bas_aa{
+.AndroidTV .bouton_bas_aa{
     margin-top: 7%;
     height: 50%;
     margin-left: 0.1em;
@@ -24,11 +24,11 @@
     cursor: pointer;
     opacity: 0.5;
 }
-.AndroidRemoteControl .volume .ui-slider-handle{
+.AndroidTV .volume .ui-slider-handle{
     background-color:#3498db !important;
 }
 
-.AndroidRemoteControl_widget .rightRafter {
+.AndroidTV_widget .rightRafter {
     width: 15px;
     height: 40px;
     position: absolute;
@@ -39,7 +39,7 @@
     opacity: 0.3;
 }
 
-.AndroidRemoteControl .rightpanel {
+.AndroidTV .rightpanel {
     padding-left: 0px;
     width: 220px;
     height: 19.34em;
@@ -51,7 +51,7 @@
     overflow: hidden;
 }
 
-.AndroidRemoteControl .rightRafter2 {
+.AndroidTV .rightRafter2 {
     width: 15px;
     height: 40px;
     position: absolute;
@@ -62,26 +62,26 @@
     opacity: 0.6;
 }
 
-.AndroidRemoteControl .rightRafter:hover {
+.AndroidTV .rightRafter:hover {
     opacity: 1;
 }
-.AndroidRemoteControl .rightRafter2:hover {
+.AndroidTV .rightRafter2:hover {
     opacity: 1;
 }
 
-.AndroidRemoteControl .rightpanel .rightRafter {
+.AndroidTV .rightpanel .rightRafter {
     -ms-transform: rotate(180deg);
     -webkit-transform: rotate(180deg);
     transform: rotate(180deg);
 }
 
-.AndroidRemoteControl .rightpanel .rightRafter2 {
+.AndroidTV .rightpanel .rightRafter2 {
     -ms-transform: rotate(180deg);
     -webkit-transform: rotate(180deg);
     transform: rotate(180deg);
 }
 
-.AndroidRemoteControl .icons img{
+.AndroidTV .icons img{
     margin-top: 2px;
     border-radius: 10%;
     width: 40px;
