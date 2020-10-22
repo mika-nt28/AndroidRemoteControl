@@ -1,8 +1,8 @@
 <?php
 require_once __DIR__ . '/../../../../core/php/core.inc.php';
-require_once "AndroidRemoteControlCmd.class.php";
+require_once "AndroidTVCmd.class.php";
 
-class AndroidRemoteControl extends eqLogic
+class AndroidTV extends eqLogic
 {
     public static $_widgetPossibility = array(
         'custom' => true,
@@ -20,7 +20,7 @@ class AndroidRemoteControl extends eqLogic
 
     public static function cron()
     {
-        foreach (eqLogic::byType('AndroidRemoteControl', true) as $eqLogic) {
+        foreach (eqLogic::byType('AndroidTV', true) as $eqLogic) {
             $eqLogic->updateInfo();
             #$eqLogic->refreshWidget();
         }
@@ -29,13 +29,13 @@ class AndroidRemoteControl extends eqLogic
     public static function dependancy_info()
     {
         $return                  = array();
-        $return['log']           = 'AndroidRemoteControl_dep';
-        $return['progress_file'] = '/tmp/AndroidRemoteControl_dep';
+        $return['log']           = 'AndroidTV_dep';
+        $return['progress_file'] = '/tmp/AndroidTV_dep';
         $adb                     = '/usr/bin/adb';
         if (is_file($adb)) {
             $return['state'] = 'ok';
         } else {
-            exec('echo AndroidRemoteControl dependency not found : ' . $adb . ' > ' . log::getPathToLog('AndroidRemoteControl_log') . ' 2>&1 &');
+            exec('echo AndroidTV dependency not found : ' . $adb . ' > ' . log::getPathToLog('v_log') . ' 2>&1 &');
             $return['state'] = 'nok';
         }
         return $return;
@@ -43,9 +43,9 @@ class AndroidRemoteControl extends eqLogic
 
     public static function dependancy_install()
     {
-        log::add('AndroidRemoteControl', 'info', 'Installation des dépéndances android-tools-adb');
+        log::add('AndroidTV', 'info', 'Installation des dépéndances android-tools-adb');
         $resource_path = realpath(__DIR__ . '/../../3rdparty');
-        passthru('/bin/bash ' . $resource_path . '/install.sh ' . $resource_path . ' > ' . log::getPathToLog('AndroidRemoteControl_dep') . ' 2>&1 &');
+        passthru('/bin/bash ' . $resource_path . '/install.sh ' . $resource_path . ' > ' . log::getPathToLog('AndroidTV_dep') . ' 2>&1 &');
     }
 
   public function runcmd($_cmd)
@@ -72,10 +72,10 @@ class AndroidRemoteControl extends eqLogic
         if ($sudo != "0") {
             $sudo_prefix = "sudo ";
         }
-        log::add('AndroidRemoteControl', 'debug', 'Arret du service ADB');
+        log::add('AndroidTV', 'debug', 'Arret du service ADB');
         shell_exec($sudo_prefix . "adb kill-server");
         sleep(3);
-        log::add('AndroidRemoteControl', 'debug', 'Lancement du service ADB');
+        log::add('AndroidTV', 'debug', 'Lancement du service ADB');
       	shell_exec($sudo_prefix . "adb start-server");
 
         }
@@ -91,9 +91,9 @@ class AndroidRemoteControl extends eqLogic
      }else{
         $ip_address = $this->getConfiguration('ip_address');
      }
-      	log::add('AndroidRemoteControl', 'debug', 'Déconnection préventive du périphérique '.$ip_address.' encours');
+      	log::add('AndroidTV', 'debug', 'Déconnection préventive du périphérique '.$ip_address.' encours');
         shell_exec($sudo_prefix . "adb connect ".$ip_address);
-        log::add('AndroidRemoteControl', 'debug', 'Connection au périphérique '.$ip_address.' encours');
+        log::add('AndroidTV', 'debug', 'Connection au périphérique '.$ip_address.' encours');
         shell_exec($sudo_prefix . "adb connect ".$ip_address);
     }
 
@@ -106,7 +106,7 @@ class AndroidRemoteControl extends eqLogic
         foreach ($json_a as $json_cmd) {
             $cmd = $this->getCmd(null, $json_cmd->name);
             if (!is_object($cmd)) {
-                $cmd = new AndroidRemoteControlCmd();
+                $cmd = new AndroidTVCmd();
                 $cmd->setLogicalId($json_cmd->name);
                 $cmd->setName(__($json_cmd->name, __FILE__));
             }
@@ -121,7 +121,7 @@ class AndroidRemoteControl extends eqLogic
 
         $volume = $this->getCmd(null, 'volume');
         if (!is_object($volume)) {
-            $volume = new AndroidRemoteControlCmd();
+            $volume = new AndroidTVCmd();
             $volume->setLogicalId('volume');
             $volume->setName(__('Volume', __FILE__));
         }
@@ -134,7 +134,7 @@ class AndroidRemoteControl extends eqLogic
 
         $cmd = $this->getCmd(null, 'setVolume');
         if (!is_object($cmd)) {
-            $cmd = new AndroidRemoteControlCmd();
+            $cmd = new AndroidTVCmd();
             $cmd->setLogicalId('setVolume');
             $cmd->setName(__('setVolume', __FILE__));
         }
@@ -150,12 +150,12 @@ class AndroidRemoteControl extends eqLogic
             $sudo_prefix = "sudo ";
         }
          if ($this->getConfiguration('type_connection') == "TCPIP") {
-        log::add('AndroidRemoteControl', 'debug', "Restart ADB en mode TCP");
+        log::add('AndroidTV', 'debug', "Restart ADB en mode TCP");
         $check = shell_exec($sudo_prefix . "adb devices TCPIP 5555");
       } elseif ($this->getConfiguration('type_connection') == "SSH") {
-       log::add('AndroidRemoteControl', 'debug', "Check de la connection SSH");
+       log::add('AndroidTV', 'debug', "Check de la connection SSH");
       } else{
-      log::add('AndroidRemoteControl', 'debug', "Restart ADB en mode USB");
+      log::add('AndroidTV', 'debug', "Restart ADB en mode USB");
         $check = shell_exec($sudo_prefix . "adb devices USB");
       }
     }
@@ -169,7 +169,7 @@ class AndroidRemoteControl extends eqLogic
 
     public function getInfo()
     {
-        $this->checkAndroidRemoteControlStatus();
+        $this->checkAndroidTVStatus();
         $sudo = exec("\$EUID");
         if ($sudo != "0") {
             $sudo_prefix = "sudo ";
@@ -177,31 +177,31 @@ class AndroidRemoteControl extends eqLogic
         $ip_address = $this->getConfiguration('ip_address');
 
         $power_state = substr($this->runcmd("shell dumpsys power -h | grep \"Display Power\" | cut -c22-"), 0, -1);
-       	log::add('AndroidRemoteControl', 'debug', "power_state: " . $power_state);
+       	log::add('AndroidTV', 'debug', "power_state: " . $power_state);
         $encours     = substr($this->runcmd("shell dumpsys window windows | grep -E 'mFocusedApp'| cut -d / -f 1 | cut -d ' ' -f 7"), 0, -1);
-        log::add('AndroidRemoteControl', 'debug', "encours: " .$encours );
+        log::add('AndroidTV', 'debug', "encours: " .$encours );
         $version_android     = substr($this->runcmd("shell getprop ro.build.version.release"), 0, -1);
-      log::add('AndroidRemoteControl', 'debug', "version_android: " .$version_android );
+      log::add('AndroidTV', 'debug', "version_android: " .$version_android );
         $name        = substr($this->runcmd("shell getprop ro.product.model"), 0, -1);
-      log::add('AndroidRemoteControl', 'debug', "name: " .$name );
+      log::add('AndroidTV', 'debug', "name: " .$name );
         $type        = substr($this->runcmd("shell getprop ro.build.characteristics"), 0, -1);
-      log::add('AndroidRemoteControl', 'debug', "type: " .$type);
+      log::add('AndroidTV', 'debug', "type: " .$type);
         $resolution  = substr($this->runcmd("shell dumpsys window displays | grep init | cut -c45-53"), 0, -1);
-      log::add('AndroidRemoteControl', 'debug', "resolution: " .$resolution );
+      log::add('AndroidTV', 'debug', "resolution: " .$resolution );
         $disk_free = substr($this->runcmd("shell dumpsys diskstats | grep Data-Free | cut -d' ' -f7"), 0, -1);
-        log::add('AndroidRemoteControl', 'debug', "disk_free: " .$disk_free );
+        log::add('AndroidTV', 'debug', "disk_free: " .$disk_free );
         $disk_total = round(substr($this->runcmd("shell dumpsys diskstats | grep Data-Free | cut -d' ' -f4"), 0, -1)/1000000, 1);
-        log::add('AndroidRemoteControl', 'debug', "disk_total: " .$disk_total);
+        log::add('AndroidTV', 'debug', "disk_total: " .$disk_total);
         $title = substr($this->runcmd("shell dumpsys bluetooth_manager | grep MediaPlayerInfo | grep .$encours. |cut -d')' -f3 | cut -d, -f1 | grep -v null | sed 's/^\ *//g'"), 0);
-      log::add('AndroidRemoteControl', 'debug', "title: " .$title);
+      log::add('AndroidTV', 'debug', "title: " .$title);
         $volume = substr($this->runcmd("shell media volume --stream 3 --get | grep volume |grep is | cut -d\ -f4"), 0, -1);
-      log::add('AndroidRemoteControl', 'debug', "volume: " .$volume);
+      log::add('AndroidTV', 'debug', "volume: " .$volume);
         $play_state  = substr($this->runcmd("shell dumpsys bluetooth_manager | grep mCurrentPlayState | cut -d,  -f1 | cut -c43-"), 0, -1);
-      log::add('AndroidRemoteControl', 'debug',  "play_state: " .$play_state );
+      log::add('AndroidTV', 'debug',  "play_state: " .$play_state );
         $battery_level  = substr($this->runcmd("shell dumpsys battery | grep level | cut -d: -f2"), 0, -1);
-      log::add('AndroidRemoteControl', 'debug', "battery_level: " .$battery_level);
+      log::add('AndroidTV', 'debug', "battery_level: " .$battery_level);
         $battery_status  = substr($this->runcmd("shell dumpsys battery | grep status"), -3);
-      log::add('AndroidRemoteControl', 'debug', "battery_status: " .$battery_status);
+      log::add('AndroidTV', 'debug', "battery_status: " .$battery_status);
 
         return array('power_state' => $power_state, 'encours' => $encours, 'version_android' => $version_android, 'name' => $name, 'type' => $type, 'resolution' => $resolution, 'disk_total' => $disk_total, 'disk_free' => $disk_free, 'title' => $title, 'volume' => $volume, 'play_state' => $play_state, 'battery_level' => $battery_level, 'battery_status' => $battery_status);
     }
@@ -217,7 +217,7 @@ class AndroidRemoteControl extends eqLogic
         if (!is_array($infos)) {
             return;
         }
-        log::add('AndroidRemoteControl', 'info', 'Rafraichissement des informations');
+        log::add('AndroidTV', 'info', 'Rafraichissement des informations');
         if (isset($infos['power_state'])) {
             $this->checkAndUpdateCmd('power_state', ($infos['power_state'] == "ON") ? 1 : 0 );
         }
@@ -229,13 +229,13 @@ class AndroidRemoteControl extends eqLogic
             $app_known = 0;
             foreach ($json_a as $json_b) { //parcours le json_a pour trouver une correspondance avec infos['encours']
                 if (stristr($infos['encours'], $json_b->name)){
-                    $cmd->setDisplay('icon', 'plugins/AndroidRemoteControl/desktop/images/'.$json_b->icon);
+                    $cmd->setDisplay('icon', 'plugins/AndroidTV/desktop/images/'.$json_b->icon);
                     $this->checkAndUpdateCmd('encours', $json_b->name);
                     $app_known = 1;
                 }
             }
             if (!$app_known) {
-                log::add('AndroidRemoteControl', 'info', 'Application '.$infos['encours'].' non reconnu.'); // signale en info une appli non presente dans la liste appli.json
+                log::add('AndroidTV', 'info', 'Application '.$infos['encours'].' non reconnu.'); // signale en info une appli non presente dans la liste appli.json
             }
             $cmd->save();
         }
@@ -292,7 +292,7 @@ class AndroidRemoteControl extends eqLogic
         }
     }
 
-    public function checkAndroidRemoteControlStatus()
+    public function checkAndroidTVStatus()
     {
         $sudo = exec("\$EUID");
         if ($sudo != "0") {
@@ -301,31 +301,31 @@ class AndroidRemoteControl extends eqLogic
         $ip_address = $this->getConfiguration('ip_address');
 
       if ($this->getConfiguration('type_connection') == "TCPIP") {
-        log::add('AndroidRemoteControl', 'debug', "Check de la connection TCPIP");
+        log::add('AndroidTV', 'debug', "Check de la connection TCPIP");
         $check = shell_exec($sudo_prefix . "adb devices | grep " . $ip_address . " | cut -f2 | xargs");
       } elseif ($this->getConfiguration('type_connection') == "SSH") {
-       log::add('AndroidRemoteControl', 'debug', "Check de la connection SSH");
+       log::add('AndroidTV', 'debug', "Check de la connection SSH");
       } else{
-      log::add('AndroidRemoteControl', 'debug', "Check de la connection USB");
+      log::add('AndroidTV', 'debug', "Check de la connection USB");
         $check = shell_exec($sudo_prefix . "adb devices | grep " . $ip_address . " | cut -f2 | xargs");
       }
               if (strstr($check, "offline")) {
             $cmd = $this->getCmd(null, 'encours');
-            log::add('AndroidRemoteControl', 'info', 'Votre appareil est offline');
-            $cmd->setDisplay('icon', 'plugins/AndroidRemoteControl/desktop/images/erreur.png');
+            log::add('AndroidTV', 'info', 'Votre appareil est offline');
+            $cmd->setDisplay('icon', 'plugins/AndroidTV/desktop/images/erreur.png');
             $cmd->save();
             $this->connectADB($ip_address);
         } elseif (!strstr($check, "device")) {
             $cmd = $this->getCmd(null, 'encours');
-            $cmd->setDisplay('icon', 'plugins/AndroidRemoteControl/desktop/images/erreur.png');
+            $cmd->setDisplay('icon', 'plugins/AndroidTV/desktop/images/erreur.png');
             $cmd->save();
-            log::add('AndroidRemoteControl', 'info', 'Votre appareil n\'est pas détecté par ADB.');
+            log::add('AndroidTV', 'info', 'Votre appareil n\'est pas détecté par ADB.');
             $this->connectADB($ip_address);
         } elseif (strstr($check, "unauthorized")) {
             $cmd = $this->getCmd(null, 'encours');
-            $cmd->setDisplay('icon', 'plugins/AndroidRemoteControl/desktop/images/erreur.png');
+            $cmd->setDisplay('icon', 'plugins/AndroidTV/desktop/images/erreur.png');
             $cmd->save();
-            log::add('AndroidRemoteControl', 'info', 'Votre connection n\'est pas autorisé');
+            log::add('AndroidTV', 'info', 'Votre connection n\'est pas autorisé');
             $this->connectADB($ip_address);
         }
     }
@@ -377,7 +377,7 @@ class AndroidRemoteControl extends eqLogic
 
         $replace['#ip#'] = $this->getConfiguration('ip_address');
 
-        return $this->postToHtml($_version, template_replace($replace, getTemplate('core', $version, 'eqLogic', 'AndroidRemoteControl')));
+        return $this->postToHtml($_version, template_replace($replace, getTemplate('core', $version, 'eqLogic', 'AndroidTV')));
     }
 
 }
