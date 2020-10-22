@@ -3,7 +3,7 @@ if (!isConnect('admin')) {
 	throw new Exception('{{401 - Accès non autorisé}}');
 }
 ?>
-<div id='div_assisantAndroidRemoteControlAlert' style="display: none;"></div>
+<div id='div_assisantAndroidTVAlert' style="display: none;"></div>
 <!-- <button id="go" class="btn btn-primary" type="button" >{{Rechercher}}</button>
 <input id="search" type="text" name="page_no" size="3"/> -->
 
@@ -12,7 +12,7 @@ if (!isConnect('admin')) {
 <!-- <br/><br/><br/> -->
 <div id="contentAssistant" style="height: 100%">
 </div>
-<script type="text/javascript" src="/plugins/AndroidRemoteControl/3rdparty/hilitor.js"></script>
+<script type="text/javascript" src="/plugins/AndroidTV/3rdparty/hilitor.js"></script>
 <script>
 	$("#go").click(function(){
 		var search = document.getElementById("search").value;
