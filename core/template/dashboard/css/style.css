@@ -1,4 +1,4 @@
-.AndroidRemoteControl_widget {
+.AndroidTV_widget {
     width: 250px;
     height: 340px;
     font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -8,13 +8,13 @@
     z-index: 1;
 }
 
-.AndroidRemoteControl_widget .uppart {
+.AndroidTV_widget .uppart {
     height: 280px;
     width: 250px;
     z-index: 2;
 }
 
-.AndroidRemoteControl_widget .power_set {
+.AndroidTV_widget .power_set {
     position: absolute;
     top: 2px;
     right: 5px;
@@ -22,7 +22,7 @@
     z-index: 0;
 }
 
-.AndroidRemoteControl_widget .reboot {
+.AndroidTV_widget .reboot {
     position: absolute;
     top: 2px;
     left: 5px;
@@ -30,18 +30,18 @@
     z-index: 0;
 }
 
-.AndroidRemoteControl_widget .title {
+.AndroidTV_widget .title {
     font-size: 1.5em;
     font-weight: bold;
     z-index: 2;
 }
 
-.AndroidRemoteControl_widget .jaquette {
+.AndroidTV_widget .jaquette {
     width: 250px;
     height: 160px;
 }
 
-.AndroidRemoteControl_widget .affiche {
+.AndroidTV_widget .affiche {
     width: 150px;
     height: auto;
     position: absolute;
@@ -50,7 +50,7 @@
     border-radius: 10%;
 }
 
-.AndroidRemoteControl_widget .affiche:hover {
+.AndroidTV_widget .affiche:hover {
     width: 150px;
     height: auto;
     position: absolute;
@@ -60,7 +60,7 @@
   	filter:blur(5px);
 }
 
-.AndroidRemoteControl_widget .icons img{
+.AndroidTV_widget .icons img{
   	margin-top: 2px;
     border-radius: 10%;
    	width: 35px;
@@ -68,11 +68,11 @@
     z-index: 7;
 }
 
-.AndroidRemoteControl_widget .commandes{
+.AndroidTV_widget .commandes{
   	padding-top:5px;
 }
 
-.AndroidRemoteControl_widget .leftpanel {
+.AndroidTV_widget .leftpanel {
     text-align: left;
     width: 250px;
     height: 327px;
@@ -83,7 +83,7 @@
 	background: rgba(0, 0, 0, 0.7);
 }
 
-.AndroidRemoteControl_widget .rightpanel {
+.AndroidTV_widget .rightpanel {
   padding-left: 20px;
     width: 250px;
     height: 327px;
@@ -94,7 +94,7 @@
     background: rgba(0, 0, 0, 0.9);
 }
 
-.AndroidRemoteControl_widget .leftRafter {
+.AndroidTV_widget .leftRafter {
     width: 15px;
     height: 40px;
     position: absolute;
@@ -108,7 +108,7 @@
     opacity: 0.3;
 }
 
-.AndroidRemoteControl_widget .leftRafter2 {
+.AndroidTV_widget .leftRafter2 {
     width: 15px;
     height: 40px;
     position: absolute;
@@ -121,20 +121,20 @@
     z-index: 4;
     opacity: 0.6;
 }
-.AndroidRemoteControl_widget .leftRafter:hover {
+.AndroidTV_widget .leftRafter:hover {
     opacity: 1;
 }
-.AndroidRemoteControl_widget .leftRafter2:hover {
+.AndroidTV_widget .leftRafter2:hover {
     opacity: 1;
 }
 
-.AndroidRemoteControl_widget .leftpanel .leftRafter2 {
+.AndroidTV_widget .leftpanel .leftRafter2 {
     -ms-transform: rotate(0deg);
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
 }
 
-.AndroidRemoteControl_widget .rightRafter {
+.AndroidTV_widget .rightRafter {
     width: 15px;
     height: 40px;
     position: absolute;
@@ -145,7 +145,7 @@
     opacity: 0.3;
 }
 
-.AndroidRemoteControl_widget .rightRafter2 {
+.AndroidTV_widget .rightRafter2 {
     width: 15px;
     height: 40px;
     position: absolute;
@@ -156,26 +156,26 @@
     opacity: 0.6;
 }
 
-.AndroidRemoteControl_widget .rightRafter:hover {
+.AndroidTV_widget .rightRafter:hover {
     opacity: 1;
 }
-.AndroidRemoteControl_widget .rightRafter2:hover {
+.AndroidTV_widget .rightRafter2:hover {
     opacity: 1;
 }
 
-.AndroidRemoteControl_widget .rightpanel .rightRafter {
+.AndroidTV_widget .rightpanel .rightRafter {
     -ms-transform: rotate(180deg);
     -webkit-transform: rotate(180deg);
     transform: rotate(180deg);
 }
 
-.AndroidRemoteControl_widget .rightpanel .rightRafter2 {
+.AndroidTV_widget .rightpanel .rightRafter2 {
     -ms-transform: rotate(180deg);
     -webkit-transform: rotate(180deg);
     transform: rotate(180deg);
 }
 
-.AndroidRemoteControl_widget .info_data{
+.AndroidTV_widget .info_data{
     font-size: 1em;
 }
 
@@ -184,7 +184,7 @@
     width: 250px;
 }
 
-.AndroidRemoteControl_widget .AndroidrcContent {
+.AndroidTV_widget .AndroidrcContent {
 	display: block;
 	margin-left: 30px;
 	overflow: hidden;
@@ -193,14 +193,14 @@
 	width: 200px;
 	height: 20px;
 }
-.AndroidRemoteControl_widget .message {
+.AndroidTV_widget .message {
 	display: block;
 	margin-left: -10%;
 	font-size: 1.2rem;
 	text-align: left;
 	animation: defilement 20s infinite linear;
 }
-.AndroidRemoteControl_widget .message:after {
+.AndroidTV_widget .message:after {
 	content: attr(data-text);
 	position: absolute;
 	white-space: nowrap;
@@ -215,13 +215,13 @@ margin-left:-100%;
 }
 }
 
-.AndroidRemoteControl_widget .volume_musiccast_widget {
+.AndroidTV_widget .volume_musiccast_widget {
     position: absolute;
     width: 250px;
     bottom: 15px;
 }
 
-.AndroidRemoteControl_widget .bouton_sup_volume {
+.AndroidTV_widget .bouton_sup_volume {
     opacity: 0.5;
     cursor: pointer;
     position: absolute;
@@ -229,12 +229,12 @@ margin-left:-100%;
     left: 5px;
 }
 
-.AndroidRemoteControl_widget .volumeDownpart {
+.AndroidTV_widget .volumeDownpart {
     height: 40px;
     width: 250px;
     z-index: 7;
 }
 
-.AndroidRemoteControl_widget .slider.slider-horizontal{
+.AndroidTV_widget .slider.slider-horizontal{
   margin-top: 10px;
 }
