@@ -62,7 +62,7 @@ $("#toStep2").click(function(){
 $("#toStep5").click(function(){
     var deviceIp = document.getElementById('ip_address').value;
     $.post({
-        url: 'plugins/AndroidRemoteControl/core/ajax/AndroidRemoteControl.ajax.php',
+        url: 'plugins/AndroidTV/core/ajax/AndroidTV.ajax.php',
         data: {
             action: 'connect',
             params: deviceIp
