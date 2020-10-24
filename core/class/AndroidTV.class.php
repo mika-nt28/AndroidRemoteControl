@@ -367,7 +367,7 @@ class AndroidTV extends eqLogic
 		$replace['#applis#'] = "";
         foreach ($this->getCmd('action') as $cmd) {
             if ($cmd->getConfiguration('categorie') == 'appli'){
-                $replace['#applis#'] = $replace['#applis#'] . '<a class="btn cmd icons noRefresh" style="display:#'.$cmd->getLogicalId().'_id_display#; padding:3px" data-cmd_id="'.$cmd->getId().'" title="'.$cmd->getName().'" onclick="jeedom.cmd.execute({id: '.$cmd->getId().'});"><img src="plugins/AndroidRemoteControl/desktop/images/'.$cmd->getConfiguration('icon') .'"></a>';
+                $replace['#applis#'] = $replace['#applis#'] . '<a class="btn cmd icons noRefresh" style="display:#'.$cmd->getLogicalId().'_id_display#; padding:3px" data-cmd_id="'.$cmd->getId().'" title="'.$cmd->getName().'" onclick="jeedom.cmd.execute({id: '.$cmd->getId().'});"><img src="plugins/AndroidTV/desktop/images/'.$cmd->getConfiguration('icon') .'"></a>';
             }else{
                 $replace['#' . $cmd->getLogicalId() . '_id#'] = $cmd->getId();
                 $replace['#' . $cmd->getLogicalId() . '_id_display#'] = (is_object($cmd) && $cmd->getIsVisible()) ? '#' . $cmd->getId() . "_id_display#" : 'none';
