@@ -157,7 +157,7 @@
 	},
 	{
 		"name": "Freebox by Oqee",
-		"icon": freeboxtv.jpg",
+		"icon": "freeboxtv.jpg",
 		"type": "action",
 		"subtype": "other",
 		"categorie": "appli",
