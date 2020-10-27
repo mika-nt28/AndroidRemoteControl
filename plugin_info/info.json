@@ -6,6 +6,7 @@
 	"author" : "Michael HALBOUT",
 	"require" : "3.0",
 	"category" : "multimedia",
+	"compatibility" : ["miniplus","smart","rpi","docker","diy","mobile","v4"],
 	"hasDependency" : true,
 	"hasOwnDeamon" : false,
 	"maxDependancyInstallTime" : 30,
