@@ -2,9 +2,11 @@
 style="text-align:center; width: 250px;border:#border#;border-radius:#border-radius#;background-color: #background-color#;color: #color#;#style#;height:320px;"
 data-eqLogic_id="#id#" data-eqLogic_uid="#uid#">
 <link rel="stylesheet" href="plugins/AndroidTV/core/template/dashboard/css/style.css"/>
-<span class="statusCmd" style="position : absolute;left : 5px;bottom : 5px; width : 30px;z-index: 1030;"></span>
+<center class="widget-name">
+	<span style="font-size: 1.2em;#hideEqLogicName#"><a href="#eqLink#">#name_display# <span class="object_name">#object_name#</span></a></span>
+</center>
 <a class="reboot cmd pull-left noRefresh" style="display:#reboot_display#" id="reboot" data-cmd_id="#reboot_id#" title="Reboot" onclick="jeedom.cmd.execute({id: #reboot_id#});"><i class="fa fa-ban"></i></a>
-<a class="power_set cmd pull-right noRefresh" id="power_set" data-cmd_id="#power_set_id#" title="Allumer/Eteindre" onclick="jeedom.cmd.execute({id: #power_set_id#});"><i class="fa fa-power-off"></i></a>
+<a class="power_set cmd pull-left noRefresh" id="power_set" data-cmd_id="#power_set_id#" title="Allumer/Eteindre" onclick="jeedom.cmd.execute({id: #power_set_id#});"><i class="fa fa-power-off"></i></a>
 
 <div class="leftpanel">
     <div style="margin-left : 7px;overflow: auto;height: 327px;">
@@ -33,9 +35,6 @@ data-eqLogic_id="#id#" data-eqLogic_uid="#uid#">
 <img class="leftRafter" src="plugins/AndroidTV/core/template/img/chevron.png" onclick="panelLeft#id#()"/>
 
 <div class="uppart">
-    <a href="#eqLink#" class="title" style="#hideEqLogicName#">#name_display# <span style="font-size: 0.85em;">#object_name#</span></a>
-
-
     <div class="jaquette">
         <a class="btn cmd volume_down pull-left noRefresh" data-cmd_id="#volume-_id#" title="Volume-" onclick="jeedom.cmd.execute({id: #volume-_id#});"><i class="fa fa-volume-down fa-lg"></i></a>
         <img class="affiche" src="#thumbnail#", onclick="screencap#id#()">
@@ -73,6 +72,7 @@ class="bouton_sup_volume" onclick="volume_AndroidTV#id#('bouton')"/>
     </div>
 </div>
 
+<span class="statusCmd" style="position : absolute;left : 5px;bottom : 0px;width : 30px;height : 30px;z-index: 1030;"></span>
 
 <script>
 if ('#power_state#' === '1') {
