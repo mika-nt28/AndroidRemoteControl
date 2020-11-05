@@ -56,15 +56,14 @@ class AndroidTV extends eqLogic{
 		}
 	}
 	public static function resetADB(){
-	$sudo = exec("\$EUID");
-	if ($sudo != "0")
-		$sudo_prefix = "sudo ";
-	log::add('AndroidTV', 'debug', 'Arret du service ADB');
-	shell_exec($sudo_prefix . "adb kill-server");
-	sleep(3);
-	log::add('AndroidTV', 'debug', 'Lancement du service ADB');
-	shell_exec($sudo_prefix . "adb start-server");
-
+		$sudo = exec("\$EUID");
+		if ($sudo != "0")
+			$sudo_prefix = "sudo ";
+		log::add('AndroidTV', 'debug', 'Arret du service ADB');
+		shell_exec($sudo_prefix . "adb kill-server");
+		sleep(3);
+		log::add('AndroidTV', 'debug', 'Lancement du service ADB');
+		shell_exec($sudo_prefix . "adb start-server");
 	}
 	public function connectADB($_ip_address = null) {
 		$sudo = exec("\$EUID");
@@ -79,7 +78,7 @@ class AndroidTV extends eqLogic{
 		log::add('AndroidTV', 'debug', 'Connection au périphérique '.$ip_address.' encours');
 		shell_exec($sudo_prefix . "adb connect ".$ip_address);
 	}
-	public function addCmd($name,$type='action',$subtype='other',$configuration=null,$unite='',$value=null){
+	public function addCmd($name,$type='action',$subtype='other',$configuration='',$unite='',$value=''){
 		$cmd = $this->getCmd(null, $name);
 		if (!is_object($cmd)) {
 			$cmd = new AndroidTVCmd();
@@ -90,12 +89,11 @@ class AndroidTV extends eqLogic{
 		$cmd->setUnite($unite);
 		$cmd->setSubType($subtype);
 		$cmd->setEqLogic_id($this->getId());
-		if($configuration != null){
+		if(is_array($configuration)){
 			foreach($configuration as $key => $value)
 				$cmd->setConfiguration($key, $value);
 		}
-		if($value != null)
-			$cmd->setValue($value);
+		$cmd->setValue($value);
 		$cmd->save();
 		return $cmd;
 	}
@@ -150,7 +148,7 @@ class AndroidTV extends eqLogic{
 		$this->addCmd("tinycam free","action","other",array('categorie'=> "appli",'icon'=>"tinycamfree.png",'commande'=>"shell monkey -p com.alexvas.dvr -c android.intent.category.LAUNCHER 1"));
 		$this->addCmd("tinycam pro","action","other",array('categorie'=> "appli",'icon'=>"tinycampro.png",'commande'=>"shell monkey -p com.alexvas.dvr.pro -c android.intent.category.LAUNCHER 1"));
 		$this->addCmd("mediashell","action","other",array('categorie'=> "appli",'icon'=>"home.png",'commande'=>""));
-		$this->addCmd("Freebox by Oqee","action",$"other",array('categorie'=> "appli",'icon'=>"freeboxtv.jpg",'commande'=>"am start -n net.oqee.androidtv/.ui.main.MainActivity"));
+		$this->addCmd("Freebox by Oqee","action","other",array('categorie'=> "appli",'icon'=>"freeboxtv.jpg",'commande'=>"am start -n net.oqee.androidtv/.ui.main.MainActivity"));
 		
 		$volume=$this->addCmd('Volume','info','numeric',array('categorie'=> 'commande'),'%');
 		$this->addCmd('setVolume','action','slider',array('categorie'=> 'commande'),'',$volume->getId());
