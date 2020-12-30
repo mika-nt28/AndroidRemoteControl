@@ -213,167 +213,138 @@ class AndroidTV extends eqLogic{
 		}
 		if (!is_array($infos)) 
 			return;
-	log::add('AndroidTV', 'info', 'Rafraichissement des informations');
-	if (isset($infos['power_state'])) {
-	$this->checkAndUpdateCmd('power_state', ($infos['power_state'] == "ON") ? 1 : 0 );
+		log::add('AndroidTV', 'info', 'Rafraichissement des informations');
+		if (isset($infos['power_state'])) 
+			$this->checkAndUpdateCmd('power_state', ($infos['power_state'] == "ON") ? 1 : 0 );
+		if (isset($infos['encours'])) {
+			$cmd = $this->getCmd(null, 'encours');
+			$url = __DIR__ . '/../../3rdparty/appli.json';
+			$data = file_get_contents($url);
+			$json_a = json_decode($data);
+			$app_known = 0;
+			foreach ($json_a as $json_b) { //parcours le json_a pour trouver une correspondance avec infos['encours']
+				if (stristr($infos['encours'], $json_b->name)){
+					$cmd->setDisplay('icon', 'plugins/AndroidTV/desktop/images/'.$json_b->icon);
+					$this->checkAndUpdateCmd('encours', $json_b->name);
+					$app_known = 1;
+				}
+			}
+			if (!$app_known) 
+				log::add('AndroidTV', 'info', 'Application '.$infos['encours'].' non reconnu.'); // signale en info une appli non presente dans la liste appli.json
+			$cmd->save();
+		}
+		if (isset($infos['version_android'])) 
+			$this->checkAndUpdateCmd('version_android', $infos['version_android']);
+		if (isset($infos['name'])) 
+			$this->checkAndUpdateCmd('name', $infos['name']);
+		if (isset($infos['type'])) 
+			$this->checkAndUpdateCmd('type', $infos['type']);
+		if (isset($infos['resolution'])) 
+			$this->checkAndUpdateCmd('resolution', $infos['resolution']);
+		if (isset($infos['disk_free']))
+			$this->checkAndUpdateCmd('disk_free', $infos['disk_free']);
+		if (isset($infos['disk_total'])) 
+			$this->checkAndUpdateCmd('disk_total', $infos['disk_total']);
+		if (isset($infos['title'])) 
+			$this->checkAndUpdateCmd('title', $infos['title']);
+		if (isset($infos['volume']))
+			$this->checkAndUpdateCmd('volume', $infos['volume']);
+		if (isset($infos['play_state'])) {
+			if ($infos['play_state'] == 2) 
+				$this->checkAndUpdateCmd('play_state', "pause");
+			elseif ($infos['play_state'] == 3)
+				$this->checkAndUpdateCmd('play_state', "lecture");
+			elseif ($infos['play_state'] == 0)
+				$this->checkAndUpdateCmd('play_state', "arret");
+			else
+				$this->checkAndUpdateCmd('play_state',"inconnue");
+		}
+		if (isset($infos['battery_level'])) 
+			$this->checkAndUpdateCmd('battery_level', $infos['battery_level']);
+		if (isset($infos['battery_status'])) {
+			if ($infos['battery_status'] == 2)
+				$this->checkAndUpdateCmd('battery_status',"en charge");
+			elseif ($infos['battery_status'] == 3)
+				$this->checkAndUpdateCmd('battery_status',"en décharge");
+			elseif ($infos['battery_status'] == 4)
+				$this->checkAndUpdateCmd('battery_status',"pas de charge");
+			elseif ($infos['battery_status'] == 5 )
+				$this->checkAndUpdateCmd('battery_status',"pleine");
+			else
+				$this->checkAndUpdateCmd('battery_status',"inconnue");
+		}
 	}
-	if (isset($infos['encours'])) {
-	$cmd = $this->getCmd(null, 'encours');
-	$url = __DIR__ . '/../../3rdparty/appli.json';
-	$data = file_get_contents($url);
-	$json_a = json_decode($data);
-	$app_known = 0;
-	foreach ($json_a as $json_b) { //parcours le json_a pour trouver une correspondance avec infos['encours']
-	if (stristr($infos['encours'], $json_b->name)){
-	$cmd->setDisplay('icon', 'plugins/AndroidTV/desktop/images/'.$json_b->icon);
-	$this->checkAndUpdateCmd('encours', $json_b->name);
-	$app_known = 1;
+	public function checkAndroidTVStatus(){
+		$sudo = exec("\$EUID");
+		if ($sudo != "0")
+			$sudo_prefix = "sudo ";
+		$ip_address = $this->getConfiguration('ip_address');			
+		if ($this->getConfiguration('type_connection') == "TCPIP") {
+			log::add('AndroidTV', 'debug', "Check de la connection TCPIP");
+			$check = shell_exec($sudo_prefix . "adb devices | grep " . $ip_address . " | cut -f2 | xargs");
+		} elseif ($this->getConfiguration('type_connection') == "SSH") {
+			log::add('AndroidTV', 'debug', "Check de la connection SSH");
+		} else{
+			log::add('AndroidTV', 'debug', "Check de la connection USB");
+			$check = shell_exec($sudo_prefix . "adb devices | grep " . $ip_address . " | cut -f2 | xargs");
+		}
+		if (strstr($check, "offline")) {
+			$cmd = $this->getCmd(null, 'encours');
+			log::add('AndroidTV', 'info', 'Votre appareil est offline');
+			$cmd->setDisplay('icon', 'plugins/AndroidTV/desktop/images/erreur.png');
+			$cmd->save();
+			$this->connectADB($ip_address);
+		} elseif (!strstr($check, "device")) {
+			$cmd = $this->getCmd(null, 'encours');
+			$cmd->setDisplay('icon', 'plugins/AndroidTV/desktop/images/erreur.png');
+			$cmd->save();
+			log::add('AndroidTV', 'info', 'Votre appareil n\'est pas détecté par ADB.');
+			$this->connectADB($ip_address);
+		} elseif (strstr($check, "unauthorized")) {
+			$cmd = $this->getCmd(null, 'encours');
+			$cmd->setDisplay('icon', 'plugins/AndroidTV/desktop/images/erreur.png');
+			$cmd->save();
+			log::add('AndroidTV', 'info', 'Votre connection n\'est pas autorisé');
+			$this->connectADB($ip_address);
+		}
 	}
-	}
-	if (!$app_known) {
-	log::add('AndroidTV', 'info', 'Application '.$infos['encours'].' non reconnu.'); // signale en info une appli non presente dans la liste appli.json
-	}
-	$cmd->save();
-	}
-	if (isset($infos['version_android'])) {
-	$this->checkAndUpdateCmd('version_android', $infos['version_android']);
-	}
-	if (isset($infos['name'])) {
-	$this->checkAndUpdateCmd('name', $infos['name']);
-	}
-
-	if (isset($infos['type'])) {
-	$this->checkAndUpdateCmd('type', $infos['type']);
-	}
-	if (isset($infos['resolution'])) {
-	$this->checkAndUpdateCmd('resolution', $infos['resolution']);
-	}
-	if (isset($infos['disk_free'])) {
-	$this->checkAndUpdateCmd('disk_free', $infos['disk_free']);
-	}
-	if (isset($infos['disk_total'])) {
-	$this->checkAndUpdateCmd('disk_total', $infos['disk_total']);
-	}
-	if (isset($infos['title'])) {
-	$this->checkAndUpdateCmd('title', $infos['title']);
-	}
-	if (isset($infos['volume'])) {
-	$this->checkAndUpdateCmd('volume', $infos['volume']);
-	}
-	if (isset($infos['play_state'])) {
-	if ($infos['play_state'] == 2) {
-	$this->checkAndUpdateCmd('play_state', "pause");
-	}elseif ($infos['play_state'] == 3){
-	$this->checkAndUpdateCmd('play_state', "lecture");
-	}elseif ($infos['play_state'] == 0){
-	$this->checkAndUpdateCmd('play_state', "arret");
-	}else
-	$this->checkAndUpdateCmd('play_state',"inconnue");
-	}
-
-	if (isset($infos['battery_level'])) {
-	$this->checkAndUpdateCmd('battery_level', $infos['battery_level']);
-	}
-	if (isset($infos['battery_status'])) {
-	if ($infos['battery_status'] == 2) {
-	$this->checkAndUpdateCmd('battery_status',"en charge");
-	} elseif ($infos['battery_status'] == 3) {
-	$this->checkAndUpdateCmd('battery_status',"en décharge");
-	} elseif ($infos['battery_status'] == 4) {
-	$this->checkAndUpdateCmd('battery_status',"pas de charge");
-	} elseif ($infos['battery_status'] == 5 ) {
-	$this->checkAndUpdateCmd('battery_status',"pleine");
-	} else
-	$this->checkAndUpdateCmd('battery_status',"inconnue");
-	}
-	}
-
-	public function checkAndroidTVStatus()
-	{
-	$sudo = exec("\$EUID");
-	if ($sudo != "0") {
-	$sudo_prefix = "sudo ";
-	}
-	$ip_address = $this->getConfiguration('ip_address');
-
-	if ($this->getConfiguration('type_connection') == "TCPIP") {
-	log::add('AndroidTV', 'debug', "Check de la connection TCPIP");
-	$check = shell_exec($sudo_prefix . "adb devices | grep " . $ip_address . " | cut -f2 | xargs");
-	} elseif ($this->getConfiguration('type_connection') == "SSH") {
-	log::add('AndroidTV', 'debug', "Check de la connection SSH");
-	} else{
-	log::add('AndroidTV', 'debug', "Check de la connection USB");
-	$check = shell_exec($sudo_prefix . "adb devices | grep " . $ip_address . " | cut -f2 | xargs");
-	}
-	if (strstr($check, "offline")) {
-	$cmd = $this->getCmd(null, 'encours');
-	log::add('AndroidTV', 'info', 'Votre appareil est offline');
-	$cmd->setDisplay('icon', 'plugins/AndroidTV/desktop/images/erreur.png');
-	$cmd->save();
-	$this->connectADB($ip_address);
-	} elseif (!strstr($check, "device")) {
-	$cmd = $this->getCmd(null, 'encours');
-	$cmd->setDisplay('icon', 'plugins/AndroidTV/desktop/images/erreur.png');
-	$cmd->save();
-	log::add('AndroidTV', 'info', 'Votre appareil n\'est pas détecté par ADB.');
-	$this->connectADB($ip_address);
-	} elseif (strstr($check, "unauthorized")) {
-	$cmd = $this->getCmd(null, 'encours');
-	$cmd->setDisplay('icon', 'plugins/AndroidTV/desktop/images/erreur.png');
-	$cmd->save();
-	log::add('AndroidTV', 'info', 'Votre connection n\'est pas autorisé');
-	$this->connectADB($ip_address);
-	}
-	}
-
 	public function toHtml($_version = 'dashboard') {
-	$replace = $this->preToHtml($_version);
-	if (!is_array($replace)) {
-	return $replace;
+		$replace = $this->preToHtml($_version);
+		if (!is_array($replace))
+			return $replace;
+		$version = jeedom::versionAlias($_version);
+		$replace['#version#'] = $_version;
+		if ($this->getDisplay('hideOn' . $version) == 1)
+			return '';
+		foreach ($this->getCmd('info') as $cmd) {
+			$replace['#' . $cmd->getLogicalId() . '_history#'] = '';
+			$replace['#' . $cmd->getLogicalId() . '_id#'] = $cmd->getId();
+			$replace['#' . $cmd->getLogicalId() . '#'] = $cmd->execCmd();
+			$replace['#' . $cmd->getLogicalId() . '_collect#'] = $cmd->getCollectDate();
+			if ($cmd->getLogicalId() == 'encours')
+				$replace['#thumbnail#'] = $cmd->getDisplay('icon');
+			if ($cmd->getLogicalId() == 'play_state'){
+				if($cmd->execCmd() == 'play')
+					$replace['#play_pause#'] = '"fa fa-pause  fa-lg" style="color:green"';
+				else
+					$replace['#play_pause#'] = '"fa fa-play  fa-lg"';
+				
+			}
+			if ($cmd->getIsHistorized() == 1) 
+				$replace['#' . $cmd->getLogicalId() . '_history#'] = 'history cursor';
+			$replace['#' . $cmd->getLogicalId() . '_id_display#'] = ($cmd->getIsVisible()) ? '#' . $cmd->getLogicalId() . "_id_display#" : "none";
+		}
+		$replace['#applis#'] = "";
+		foreach ($this->getCmd('action') as $cmd) {
+			if ($cmd->getConfiguration('categorie') == 'appli'){
+				$replace['#applis#'] = $replace['#applis#'] . '<a class="btn cmd icons noRefresh" style="display:#'.$cmd->getLogicalId().'_id_display#; padding:3px" data-cmd_id="'.$cmd->getId().'" title="'.$cmd->getName().'" onclick="jeedom.cmd.execute({id: '.$cmd->getId().'});"><img src="plugins/AndroidTV/desktop/images/'.$cmd->getConfiguration('icon') .'"></a>';
+			}else{
+				$replace['#' . $cmd->getLogicalId() . '_id#'] = $cmd->getId();
+				$replace['#' . $cmd->getLogicalId() . '_id_display#'] = (is_object($cmd) && $cmd->getIsVisible()) ? '#' . $cmd->getId() . "_id_display#" : 'none';
+			}
+			$replace['#' . $cmd->getLogicalId() . '_id_display#'] = ($cmd->getIsVisible()) ? '#' . $cmd->getLogicalId() . "_id_display#" : "none";
+		}
+		$replace['#ip#'] = $this->getConfiguration('ip_address');
+		return $this->postToHtml($_version, template_replace($replace, getTemplate('core', $version, 'eqLogic', 'AndroidTV')));
 	}
-	$version = jeedom::versionAlias($_version);
-	$replace['#version#'] = $_version;
-	if ($this->getDisplay('hideOn' . $version) == 1) {
-	return '';
-	}
-
-	foreach ($this->getCmd('info') as $cmd) {
-	$replace['#' . $cmd->getLogicalId() . '_history#'] = '';
-	$replace['#' . $cmd->getLogicalId() . '_id#'] = $cmd->getId();
-	$replace['#' . $cmd->getLogicalId() . '#'] = $cmd->execCmd();
-	$replace['#' . $cmd->getLogicalId() . '_collect#'] = $cmd->getCollectDate();
-
-	if ($cmd->getLogicalId() == 'encours'){
-	$replace['#thumbnail#'] = $cmd->getDisplay('icon');
-	}
-
-	if ($cmd->getLogicalId() == 'play_state'){
-	if($cmd->execCmd() == 'play'){
-	$replace['#play_pause#'] = '"fa fa-pause  fa-lg" style="color:green"';
-	}else{
-	$replace['#play_pause#'] = '"fa fa-play  fa-lg"';
-	}
-	}
-
-	if ($cmd->getIsHistorized() == 1) {
-	$replace['#' . $cmd->getLogicalId() . '_history#'] = 'history cursor';
-	}
-	$replace['#' . $cmd->getLogicalId() . '_id_display#'] = ($cmd->getIsVisible()) ? '#' . $cmd->getLogicalId() . "_id_display#" : "none";
-	}
-	$replace['#applis#'] = "";
-	foreach ($this->getCmd('action') as $cmd) {
-	if ($cmd->getConfiguration('categorie') == 'appli'){
-	$replace['#applis#'] = $replace['#applis#'] . '<a class="btn cmd icons noRefresh" style="display:#'.$cmd->getLogicalId().'_id_display#; padding:3px" data-cmd_id="'.$cmd->getId().'" title="'.$cmd->getName().'" onclick="jeedom.cmd.execute({id: '.$cmd->getId().'});"><img src="plugins/AndroidTV/desktop/images/'.$cmd->getConfiguration('icon') .'"></a>';
-	}else{
-	$replace['#' . $cmd->getLogicalId() . '_id#'] = $cmd->getId();
-	$replace['#' . $cmd->getLogicalId() . '_id_display#'] = (is_object($cmd) && $cmd->getIsVisible()) ? '#' . $cmd->getId() . "_id_display#" : 'none';
-	}
-	$replace['#' . $cmd->getLogicalId() . '_id_display#'] = ($cmd->getIsVisible()) ? '#' . $cmd->getLogicalId() . "_id_display#" : "none";
-	}
-
-	$replace['#ip#'] = $this->getConfiguration('ip_address');
-
-	return $this->postToHtml($_version, template_replace($replace, getTemplate('core', $version, 'eqLogic', 'AndroidTV')));
-	}
-
 }
