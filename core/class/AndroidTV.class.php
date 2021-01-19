@@ -217,21 +217,18 @@ class AndroidTV extends eqLogic{
 		if (isset($infos['power_state'])) 
 			$this->checkAndUpdateCmd('power_state', ($infos['power_state'] == "ON") ? 1 : 0 );
 		if (isset($infos['encours'])) {
-			$cmd = $this->getCmd(null, 'encours');
-			$url = __DIR__ . '/../../3rdparty/appli.json';
-			$data = file_get_contents($url);
-			$json_a = json_decode($data);
+			$encours = $this->getCmd(null, 'encours');
 			$app_known = 0;
-			foreach ($json_a as $json_b) { //parcours le json_a pour trouver une correspondance avec infos['encours']
-				if (stristr($infos['encours'], $json_b->name)){
-					$cmd->setDisplay('icon', 'plugins/AndroidTV/desktop/images/'.$json_b->icon);
-					$this->checkAndUpdateCmd('encours', $json_b->name);
+			foreach ($this->getCmd() as $cmd) {
+				if (stristr($infos['encours'], $cmd->getName())){
+					$encours->setDisplay('icon', 'plugins/AndroidTV/desktop/images/'.$cmd->getConfiguration('icon'));
+					$this->checkAndUpdateCmd('encours', $cmd->getName());
 					$app_known = 1;
 				}
 			}
 			if (!$app_known) 
-				log::add('AndroidTV', 'info', 'Application '.$infos['encours'].' non reconnu.'); // signale en info une appli non presente dans la liste appli.json
-			$cmd->save();
+				log::add('AndroidTV', 'info', 'Application '.$infos['encours'].' non reconnu.');
+			$encours->save();
 		}
 		if (isset($infos['version_android'])) 
 			$this->checkAndUpdateCmd('version_android', $infos['version_android']);
