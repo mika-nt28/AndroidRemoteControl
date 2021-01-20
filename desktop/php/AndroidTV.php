@@ -79,7 +79,8 @@
 				<a href="#apptab" aria-controls="profile" role="tab" data-toggle="tab">
 					<i class="fas fa-list-alt"></i> 
 					{{Liste des applications}}
-			</a>
+				</a>
+			</li>
 		</ul>
 		<div class="tab-content" style="height:calc(100% - 50px);overflow:auto;overflow-x: hidden;">
 			<div role="tabpanel" class="tab-pane active" id="eqlogictab">
