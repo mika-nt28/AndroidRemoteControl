@@ -193,26 +193,26 @@
 					</div>
 				</div>
 			</div>
-		</div>
-		<div role="tabpanel" class="tab-pane" id="commandtab">
-			<table id="table_cmd" class="table table-bordered table-condensed">
-				<thead>
-					<tr>
-						<th>{{Nom}}</th><th>{{Type}}</th><th>{{Afficher}}</th><th>{{Action}}</th>
-					</tr>
-				</thead>
-				<tbody></tbody>
-			</table>
-		</div>
-		<div role="tabpanel" class="tab-pane" id="apptab">
-			<table id="table_appli" class="table table-bordered table-condensed">
-				<thead>
-					<tr>
-						<th>{{Nom}}</th><th>{{Type}}</th><th>{{Afficher}}</th><th>{{Action}}</th>
-					</tr>
-				</thead>
-				<tbody></tbody>
-			</table>
+			<div role="tabpanel" class="tab-pane" id="commandtab">
+				<table id="table_cmd" class="table table-bordered table-condensed">
+					<thead>
+						<tr>
+							<th>{{Nom}}</th><th>{{Type}}</th><th>{{Afficher}}</th><th>{{Action}}</th>
+						</tr>
+					</thead>
+					<tbody></tbody>
+				</table>
+			</div>
+			<div role="tabpanel" class="tab-pane" id="apptab">
+				<table id="table_appli" class="table table-bordered table-condensed">
+					<thead>
+						<tr>
+							<th>{{Nom}}</th><th>{{Type}}</th><th>{{Afficher}}</th><th>{{Action}}</th>
+						</tr>
+					</thead>
+					<tbody></tbody>
+				</table>
+			</div>
 		</div>
 	</div>
 </div>
