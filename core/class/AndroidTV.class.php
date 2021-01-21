@@ -192,10 +192,12 @@ class AndroidTV extends eqLogic{
 		log::add('AndroidTV', 'debug', "disk_free: " .$infos['disk_free'] );
 		$infos['disk_total'] = round(intval(substr($this->runcmd("shell dumpsys diskstats | grep Data-Free | cut -d' ' -f4"), 0, -1))/1000000, 1);
 		log::add('AndroidTV', 'debug', "disk_total: " .$infos['disk_total']);
-		$infos['title'] = substr($this->runcmd("shell dumpsys bluetooth_manager | grep MediaPlayerInfo | grep .$infos['encours']. |cut -d')' -f3 | cut -d, -f1 | grep -v null | sed 's/^\ *//g'"), 0);
-		log::add('AndroidTV', 'debug', "title: " .$infos['title']);
-		//$volume = substr($this->runcmd("shell media volume --stream 3 --get | grep volume |grep is | cut -d\ -f4"), 0, -1);
-		//log::add('AndroidTV', 'debug', "volume: " .$volume);
+		if($infos['encours'] != 'com.google.android.leanbacklauncher'){
+			$infos['title'] = substr($this->runcmd("shell dumpsys bluetooth_manager | grep MediaPlayerInfo | grep .$infos['encours']. |cut -d')' -f3 | cut -d, -f1 | grep -v null | sed 's/^\ *//g'"), 0);
+			log::add('AndroidTV', 'debug', "title: " .$infos['title']);
+		}
+		$infos['volume'] = substr($this->runcmd("shell media volume --stream 3 --get | grep volume |grep is | cut -d -f4"), 0, -1);
+		log::add('AndroidTV', 'debug', "volume: " .$infos['volume']);
 		$infos['play_state']  = substr($this->runcmd("shell dumpsys bluetooth_manager | grep mCurrentPlayState | cut -d,  -f1 | cut -c43-"), 0, -1);
 		log::add('AndroidTV', 'debug',  "play_state: " .$infos['play_state'] );
 		$infos['battery_level']  = substr($this->runcmd("shell dumpsys battery | grep level | cut -d: -f2"), 0, -1);
