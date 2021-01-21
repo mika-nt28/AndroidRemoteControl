@@ -190,7 +190,7 @@ class AndroidTV extends eqLogic{
 		log::add('AndroidTV', 'debug', "resolution: " .$resolution );
 		$disk_free = substr($this->runcmd("shell dumpsys diskstats | grep Data-Free | cut -d' ' -f7"), 0, -1);
 		log::add('AndroidTV', 'debug', "disk_free: " .$disk_free );
-		$disk_total = round(substr($this->runcmd("shell dumpsys diskstats | grep Data-Free | cut -d' ' -f4"), 0, -1)/1000000, 1);
+		$disk_total = round(intval(substr($this->runcmd("shell dumpsys diskstats | grep Data-Free | cut -d' ' -f4"), 0, -1))/1000000, 1);
 		log::add('AndroidTV', 'debug', "disk_total: " .$disk_total);
 		$title = substr($this->runcmd("shell dumpsys bluetooth_manager | grep MediaPlayerInfo | grep .$encours. |cut -d')' -f3 | cut -d, -f1 | grep -v null | sed 's/^\ *//g'"), 0);
 		log::add('AndroidTV', 'debug', "title: " .$title);
