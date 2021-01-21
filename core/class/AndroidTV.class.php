@@ -203,7 +203,7 @@ class AndroidTV extends eqLogic{
 		$battery_status  = substr($this->runcmd("shell dumpsys battery | grep status"), -3);
 		log::add('AndroidTV', 'debug', "battery_status: " .$battery_status);
 
-		return array('power_state' => $power_state, 'encours' => $encours, 'version_android' => $version_android, 'name' => $name, 'type' => $type, 'resolution' => $resolution, 'disk_total' => $disk_total, 'disk_free' => $disk_free, 'title' => $title, 'volume' => $volume, 'play_state' => $play_state, 'battery_level' => $battery_level, 'battery_status' => $battery_status);
+		return array('power_state' => $power_state, 'encours' => $encours, 'version_android' => $version_android, 'name' => $name, 'type' => $type, 'resolution' => $resolution, 'disk_total' => $disk_total, 'disk_free' => $disk_free, 'title' => $title, /*'volume' => $volume,*/ 'play_state' => $play_state, 'battery_level' => $battery_level, 'battery_status' => $battery_status);
 	}
 	public function updateInfo(){
 		try {
