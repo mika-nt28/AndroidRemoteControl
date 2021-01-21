@@ -176,34 +176,33 @@ class AndroidTV extends eqLogic{
 		if ($sudo != "0")
 			$sudo_prefix = "sudo ";
 		$ip_address = $this->getConfiguration('ip_address');
-		$power_state = substr($this->runcmd("shell dumpsys power -h | grep \"Display Power\" | cut -c22-"), 0, -1);
+		$infos['power_state'] = substr($this->runcmd("shell dumpsys power -h | grep \"Display Power\" | cut -c22-"), 0, -1);
 		log::add('AndroidTV', 'debug', "power_state: " . $power_state);
-		$encours     = substr($this->runcmd("shell dumpsys window windows | grep -E 'mFocusedApp'| cut -d / -f 1 | cut -d ' ' -f 7"), 0, -1);
+		$infos['encours']     = substr($this->runcmd("shell dumpsys window windows | grep -E 'mFocusedApp'| cut -d / -f 1 | cut -d ' ' -f 7"), 0, -1);
 		log::add('AndroidTV', 'debug', "encours: " .$encours );
-		$version_android     = substr($this->runcmd("shell getprop ro.build.version.release"), 0, -1);
+		$infos['version_android']     = substr($this->runcmd("shell getprop ro.build.version.release"), 0, -1);
 		log::add('AndroidTV', 'debug', "version_android: " .$version_android );
-		$name        = substr($this->runcmd("shell getprop ro.product.model"), 0, -1);
+		$infos['name']        = substr($this->runcmd("shell getprop ro.product.model"), 0, -1);
 		log::add('AndroidTV', 'debug', "name: " .$name );
-		$type        = substr($this->runcmd("shell getprop ro.build.characteristics"), 0, -1);
+		$infos['type']        = substr($this->runcmd("shell getprop ro.build.characteristics"), 0, -1);
 		log::add('AndroidTV', 'debug', "type: " .$type);
-		$resolution  = substr($this->runcmd("shell dumpsys window displays | grep init | cut -c45-53"), 0, -1);
+		$infos['resolution']  = substr($this->runcmd("shell dumpsys window displays | grep init | cut -c45-53"), 0, -1);
 		log::add('AndroidTV', 'debug', "resolution: " .$resolution );
-		$disk_free = substr($this->runcmd("shell dumpsys diskstats | grep Data-Free | cut -d' ' -f7"), 0, -1);
+		$infos['disk_free'] = substr($this->runcmd("shell dumpsys diskstats | grep Data-Free | cut -d' ' -f7"), 0, -1);
 		log::add('AndroidTV', 'debug', "disk_free: " .$disk_free );
-		$disk_total = round(intval(substr($this->runcmd("shell dumpsys diskstats | grep Data-Free | cut -d' ' -f4"), 0, -1))/1000000, 1);
+		$infos['disk_total'] = round(intval(substr($this->runcmd("shell dumpsys diskstats | grep Data-Free | cut -d' ' -f4"), 0, -1))/1000000, 1);
 		log::add('AndroidTV', 'debug', "disk_total: " .$disk_total);
-		$title = substr($this->runcmd("shell dumpsys bluetooth_manager | grep MediaPlayerInfo | grep .$encours. |cut -d')' -f3 | cut -d, -f1 | grep -v null | sed 's/^\ *//g'"), 0);
+		$infos['title'] = substr($this->runcmd("shell dumpsys bluetooth_manager | grep MediaPlayerInfo | grep .$encours. |cut -d')' -f3 | cut -d, -f1 | grep -v null | sed 's/^\ *//g'"), 0);
 		log::add('AndroidTV', 'debug', "title: " .$title);
 		//$volume = substr($this->runcmd("shell media volume --stream 3 --get | grep volume |grep is | cut -d\ -f4"), 0, -1);
 		//log::add('AndroidTV', 'debug', "volume: " .$volume);
-		$play_state  = substr($this->runcmd("shell dumpsys bluetooth_manager | grep mCurrentPlayState | cut -d,  -f1 | cut -c43-"), 0, -1);
+		$infos['play_state']  = substr($this->runcmd("shell dumpsys bluetooth_manager | grep mCurrentPlayState | cut -d,  -f1 | cut -c43-"), 0, -1);
 		log::add('AndroidTV', 'debug',  "play_state: " .$play_state );
-		$battery_level  = substr($this->runcmd("shell dumpsys battery | grep level | cut -d: -f2"), 0, -1);
+		$infos['battery_level']  = substr($this->runcmd("shell dumpsys battery | grep level | cut -d: -f2"), 0, -1);
 		log::add('AndroidTV', 'debug', "battery_level: " .$battery_level);
-		$battery_status  = substr($this->runcmd("shell dumpsys battery | grep status"), -3);
+		$infos['battery_status']  = substr($this->runcmd("shell dumpsys battery | grep status"), -3);
 		log::add('AndroidTV', 'debug', "battery_status: " .$battery_status);
-
-		return array('power_state' => $power_state, 'encours' => $encours, 'version_android' => $version_android, 'name' => $name, 'type' => $type, 'resolution' => $resolution, 'disk_total' => $disk_total, 'disk_free' => $disk_free, 'title' => $title, /*'volume' => $volume,*/ 'play_state' => $play_state, 'battery_level' => $battery_level, 'battery_status' => $battery_status);
+		return $infos;
 	}
 	public function updateInfo(){
 		try {
