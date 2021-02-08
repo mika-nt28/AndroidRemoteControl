@@ -171,7 +171,8 @@ class AndroidTV extends eqLogic{
 		throw new \Exception(__('L\'adresse IP doit être renseignée', __FILE__));
 	}
 	public function getInfo(){
-		$this->checkAndroidTVStatus();
+		if($this->checkAndroidTVStatus() === false)
+			return false;
 		$sudo = exec("\$EUID");
 		if ($sudo != "0")
 			$sudo_prefix = "sudo ";
@@ -207,6 +208,8 @@ class AndroidTV extends eqLogic{
 	public function updateInfo(){
 		try {
 			$infos = $this->getInfo();
+			if($infos === false)
+				return;
 		} catch (\Exception $e) {
 			return;
 		}
@@ -289,7 +292,8 @@ class AndroidTV extends eqLogic{
 			log::add('AndroidTV', 'info', 'Votre appareil est offline');
 			$cmd->setDisplay('icon', 'plugins/AndroidTV/desktop/images/erreur.png');
 			$cmd->save();
-			$this->connectADB($ip_address);
+			//$this->connectADB($ip_address);
+			return false;
 		} elseif (!strstr($check, "device")) {
 			$cmd = $this->getCmd(null, 'encours');
 			$cmd->setDisplay('icon', 'plugins/AndroidTV/desktop/images/erreur.png');
