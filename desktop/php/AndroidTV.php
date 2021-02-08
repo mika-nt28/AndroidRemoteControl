@@ -204,6 +204,7 @@
 				</table>
 			</div>
 			<div role="tabpanel" class="tab-pane" id="apptab">
+				<a class="btn btn-success btn-sm cmdAction pull-right" data-action="add" style="margin-top:5px;"><i class="fas fa-plus-circle"></i> {{Commandes}}</a>
 				<table id="table_appli" class="table table-bordered table-condensed">
 					<thead>
 						<tr>
