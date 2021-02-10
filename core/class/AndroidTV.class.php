@@ -73,9 +73,9 @@ class AndroidTV extends eqLogic{
 			$ip_address = $_ip_address;
 		else
 			$ip_address = $this->getConfiguration('ip_address');
-		log::add('AndroidTV', 'debug', 'Déconnection préventive du périphérique '.$ip_address.' encours');
+		log::add('AndroidTV', 'debug', $this->getHumanName(). ' Déconnection préventive du périphérique '.$ip_address.' encours');
 		shell_exec($sudo_prefix . "adb connect ".$ip_address);
-		log::add('AndroidTV', 'debug', 'Connection au périphérique '.$ip_address.' encours');
+		log::add('AndroidTV', 'debug', $this->getHumanName(). ' Connection au périphérique '.$ip_address.' encours');
 		shell_exec($sudo_prefix . "adb connect ".$ip_address);
 	}
 	public function addCmd($name,$type='action',$subtype='other',$configuration='',$unite='',$value=''){
@@ -157,12 +157,12 @@ class AndroidTV extends eqLogic{
 		if ($sudo != "0")
 		$sudo_prefix = "sudo ";
 		if ($this->getConfiguration('type_connection') == "TCPIP") {
-			log::add('AndroidTV', 'debug', "Restart ADB en mode TCP");
+			log::add('AndroidTV', 'debug', $this->getHumanName() . " Restart ADB en mode TCP");
 			$check = shell_exec($sudo_prefix . "adb devices TCPIP 5555");
 		} elseif ($this->getConfiguration('type_connection') == "SSH") {
-			log::add('AndroidTV', 'debug', "Check de la connection SSH");
+			log::add('AndroidTV', 'debug', $this->getHumanName() . " Check de la connection SSH");
 		} else{
-			log::add('AndroidTV', 'debug', "Restart ADB en mode USB");
+			log::add('AndroidTV', 'debug', $this->getHumanName() . " Restart ADB en mode USB");
 			$check = shell_exec($sudo_prefix . "adb devices USB");
 		}
 	}
@@ -178,31 +178,31 @@ class AndroidTV extends eqLogic{
 			$sudo_prefix = "sudo ";
 		$ip_address = $this->getConfiguration('ip_address');
 		$infos['power_state'] = substr($this->runcmd("shell dumpsys power -h | grep \"Display Power\" | cut -c22-"), 0, -1);
-		log::add('AndroidTV', 'debug', "power_state: " . $infos['power_state']);
+		log::add('AndroidTV', 'debug', $this->getHumanName() . " power_state: " . $infos['power_state']);
 		$infos['encours']     = substr($this->runcmd("shell dumpsys window windows | grep -E 'mFocusedApp'| cut -d / -f 1 | cut -d ' ' -f 7"), 0, -1);
-		log::add('AndroidTV', 'debug', "encours: " .$infos['encours'] );
+		log::add('AndroidTV', 'debug', $this->getHumanName() . " encours: " .$infos['encours'] );
 		$infos['version_android']     = substr($this->runcmd("shell getprop ro.build.version.release"), 0, -1);
-		log::add('AndroidTV', 'debug', "version_android: " .$infos['version_android'] );
+		log::add('AndroidTV', 'debug', $this->getHumanName() . " version_android: " .$infos['version_android'] );
 		$infos['name']        = substr($this->runcmd("shell getprop ro.product.model"), 0, -1);
-		log::add('AndroidTV', 'debug', "name: " .$infos['name'] );
+		log::add('AndroidTV', 'debug', $this->getHumanName() . " name: " .$infos['name'] );
 		$infos['type']        = substr($this->runcmd("shell getprop ro.build.characteristics"), 0, -1);
-		log::add('AndroidTV', 'debug', "type: " .$infos['type']);
+		log::add('AndroidTV', 'debug', $this->getHumanName() . " type: " .$infos['type']);
 		$infos['resolution']  = substr($this->runcmd("shell dumpsys window displays | grep init | cut -c45-53"), 0, -1);
-		log::add('AndroidTV', 'debug', "resolution: " .$infos['resolution'] );
+		log::add('AndroidTV', 'debug', $this->getHumanName() . " resolution: " .$infos['resolution'] );
 		$infos['disk_free'] = substr($this->runcmd("shell dumpsys diskstats | grep Data-Free | cut -d' ' -f7"), 0, -1);
-		log::add('AndroidTV', 'debug', "disk_free: " .$infos['disk_free'] );
+		log::add('AndroidTV', 'debug',$this->getHumanName() . " disk_free: " .$infos['disk_free'] );
 		$infos['disk_total'] = round(intval(substr($this->runcmd("shell dumpsys diskstats | grep Data-Free | cut -d' ' -f4"), 0, -1))/1000000, 1);
 		log::add('AndroidTV', 'debug', "disk_total: " .$infos['disk_total']);
 		//$infos['title'] = substr($this->runcmd("shell dumpsys bluetooth_manager | grep MediaPlayerInfo | grep .$infos['encours']. |cut -d')' -f3 | cut -d, -f1 | grep -v null | sed 's/^\ *//g'"), 0);
-		//log::add('AndroidTV', 'debug', "title: " .$infos['title']);
+		//log::add('AndroidTV', 'debug', $this->getHumanName() . "title: " .$infos['title']);
 		//$infos['volume'] = substr($this->runcmd("shell media volume --stream 3 --get | grep volume |grep is | cut -d -f4"), 0, -1);
-		//log::add('AndroidTV', 'debug', "volume: " .$infos['volume']);
+		//log::add('AndroidTV', 'debug',$this->getHumanName() . "volume: " .$infos['volume']);
 		$infos['play_state']  = substr($this->runcmd("shell dumpsys bluetooth_manager | grep mCurrentPlayState | cut -d,  -f1 | cut -c43-"), 0, -1);
-		log::add('AndroidTV', 'debug',  "play_state: " .$infos['play_state'] );
+		log::add('AndroidTV', 'debug',  $this->getHumanName() . " play_state: " .$infos['play_state'] );
 		$infos['battery_level']  = substr($this->runcmd("shell dumpsys battery | grep level | cut -d: -f2"), 0, -1);
-		log::add('AndroidTV', 'debug', "battery_level: " .$infos['battery_level']);
+		log::add('AndroidTV', 'debug', $this->getHumanName() . " battery_level: " .$infos['battery_level']);
 		$infos['battery_status']  = substr($this->runcmd("shell dumpsys battery | grep status"), -3);
-		log::add('AndroidTV', 'debug', "battery_status: " .$infos['battery_status']);
+		log::add('AndroidTV', 'debug', $this->getHumanName() . " battery_status: " .$infos['battery_status']);
 		return $infos;
 	}
 	public function updateInfo(){
@@ -215,7 +215,7 @@ class AndroidTV extends eqLogic{
 		}
 		if (!is_array($infos)) 
 			return;
-		log::add('AndroidTV', 'info', 'Rafraichissement des informations');
+		log::add('AndroidTV', 'info', $this->getHumanName() . ' Rafraichissement des informations');
 		if (isset($infos['power_state'])) 
 			$this->checkAndUpdateCmd('power_state', ($infos['power_state'] == "ON") ? 1 : 0 );
 		if (isset($infos['encours'])) {
@@ -229,7 +229,7 @@ class AndroidTV extends eqLogic{
 				}
 			}
 			if (!$app_known) 
-				log::add('AndroidTV', 'info', 'Application '.$infos['encours'].' non reconnu.');
+				log::add('AndroidTV', 'info', $this->getHumanName() . ' Application '.$infos['encours'].' non reconnu.');
 			$encours->save();
 		}
 		if (isset($infos['version_android'])) 
@@ -279,17 +279,17 @@ class AndroidTV extends eqLogic{
 			$sudo_prefix = "sudo ";
 		$ip_address = $this->getConfiguration('ip_address');			
 		if ($this->getConfiguration('type_connection') == "TCPIP") {
-			log::add('AndroidTV', 'debug', "Check de la connection TCPIP");
+			log::add('AndroidTV', 'debug', $this->getHumanName() . " Check de la connection TCPIP");
 			$check = shell_exec($sudo_prefix . "adb devices | grep " . $ip_address . " | cut -f2 | xargs");
 		} elseif ($this->getConfiguration('type_connection') == "SSH") {
-			log::add('AndroidTV', 'debug', "Check de la connection SSH");
+			log::add('AndroidTV', 'debug', $this->getHumanName() . " Check de la connection SSH");
 		} else{
-			log::add('AndroidTV', 'debug', "Check de la connection USB");
+			log::add('AndroidTV', 'debug', $this->getHumanName() . " Check de la connection USB");
 			$check = shell_exec($sudo_prefix . "adb devices | grep " . $ip_address . " | cut -f2 | xargs");
 		}
 		if (strstr($check, "offline")) {
 			$cmd = $this->getCmd(null, 'encours');
-			log::add('AndroidTV', 'info', 'Votre appareil est offline');
+			log::add('AndroidTV', 'info',$this->getHumanName() . ' Votre appareil est offline');
 			$cmd->setDisplay('icon', 'plugins/AndroidTV/desktop/images/erreur.png');
 			$cmd->save();
 			//$this->connectADB($ip_address);
@@ -298,13 +298,13 @@ class AndroidTV extends eqLogic{
 			$cmd = $this->getCmd(null, 'encours');
 			$cmd->setDisplay('icon', 'plugins/AndroidTV/desktop/images/erreur.png');
 			$cmd->save();
-			log::add('AndroidTV', 'info', 'Votre appareil n\'est pas détecté par ADB.');
+			log::add('AndroidTV', 'info', $this->getHumanName() . ' Votre appareil n\'est pas détecté par ADB.');
 			$this->connectADB($ip_address);
 		} elseif (strstr($check, "unauthorized")) {
 			$cmd = $this->getCmd(null, 'encours');
 			$cmd->setDisplay('icon', 'plugins/AndroidTV/desktop/images/erreur.png');
 			$cmd->save();
-			log::add('AndroidTV', 'info', 'Votre connection n\'est pas autorisé');
+			log::add('AndroidTV', 'info',$this->getHumanName() . ' Votre connection n\'est pas autorisé');
 			$this->connectADB($ip_address);
 		}
 	}
