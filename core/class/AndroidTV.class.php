@@ -16,7 +16,7 @@ class AndroidTV extends eqLogic{
 			),
 		),
 	);
-	public static function cron()    {
+	public static function CheckAndroidTV()    {
 		foreach (eqLogic::byType('AndroidTV', true) as $eqLogic) {
 			$eqLogic->updateInfo();
 			#$eqLogic->refreshWidget();
@@ -34,6 +34,53 @@ class AndroidTV extends eqLogic{
 			$return['state'] = 'nok';
 		}
 		return $return;
+	}
+	public static function deamon_info() {
+		$return = array();
+		$return['log'] = 'AndroidTV';
+		$return['launchable'] = 'ok';
+		$return['state'] = 'nok';
+		foreach(eqLogic::byType('AndroidTV') as $AndroidTV){
+			if(AndroidTV->getIsEnable() ){
+				$cron = cron::byClassAndFunction('AndroidTV', 'CheckAndroidTV', array('id' => $AndroidTV->getId()));
+				if (!is_object($cron))	
+					return $return;
+			}
+		}
+		$return['state'] = 'ok';
+		return $return;
+	}
+	public static function deamon_start($_debug = false) {
+		log::remove('AndroidTV');
+		self::deamon_stop();
+		$deamon_info = self::deamon_info();
+		if ($deamon_info['launchable'] != 'ok') 
+			return;
+		if ($deamon_info['state'] == 'ok') 
+			return;
+		foreach(eqLogic::byType('AndroidTV') as $AndroidTV)
+			$AndroidTV->createDeamon();
+	}
+	public static function deamon_stop() {	
+		foreach(eqLogic::byType('AndroidTV') as $AndroidTV){
+			$cron = cron::byClassAndFunction('AndroidTV', 'CheckAndroidTV', array('id' => $AndroidTV->getId()));
+			if(is_object($cron))	
+				$cron->remove();
+		}
+	}
+	public function createDeamon() {
+		$cron = cron::byClassAndFunction('AndroidTV', 'CheckAndroidTV', array('id' => $this->getId()));
+		if (!is_object($cron)) {
+			$cron = new cron();
+			$cron->setClass('AndroidTV');
+			$cron->setFunction('CheckAndroidTV');
+			$cron->setOption(array('id' => $this->getId()));
+			$cron->setEnable(1);
+			$cron->setTimeout('1');
+			$cron->setSchedule('* * * * * *');
+			$cron->save();
+		}
+		$cron->start();
 	}
 	public static function dependancy_install(){
 		log::add('AndroidTV', 'info', 'Installation des dépéndances android-tools-adb');
@@ -300,6 +347,7 @@ class AndroidTV extends eqLogic{
 			$cmd->save();
 			log::add('AndroidTV', 'info', $this->getHumanName() . ' Votre appareil n\'est pas détecté par ADB.');
 			$this->connectADB($ip_address);
+			return false;
 		} elseif (strstr($check, "unauthorized")) {
 			$cmd = $this->getCmd(null, 'encours');
 			$cmd->setDisplay('icon', 'plugins/AndroidTV/desktop/images/erreur.png');
