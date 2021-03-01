@@ -8,7 +8,7 @@
 	"category" : "multimedia",
 	"compatibility" : ["miniplus","smart","rpi","docker","diy","mobile","v4"],
 	"hasDependency" : true,
-	"hasOwnDeamon" : false,
+	"hasOwnDeamon" : true,
 	"maxDependancyInstallTime" : 30,
  	"documentation" : "http://mika-nt28.github.io/Documentations/AndroidTV/#language#/",
 	"changelog" : "https://mika-nt28.github.io/Documentations/AndroidTV/#language#/changelog"
