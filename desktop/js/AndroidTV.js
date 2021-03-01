@@ -11,7 +11,7 @@ $("#bt_configureAdb").click(function(){
 });
 function addCmdToTable(_cmd) {
     if (!isset(_cmd)) {
-        var _cmd = {configuration: {}};
+        var _cmd = {type:'action',subtype:'other',configuration: {categorie:"appli"}};
     }
     if (!isset(_cmd.configuration)) {
         _cmd.configuration = {};
