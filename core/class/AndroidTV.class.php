@@ -16,10 +16,11 @@ class AndroidTV extends eqLogic{
 			),
 		),
 	);
-	public static function CheckAndroidTV()    {
-		foreach (eqLogic::byType('AndroidTV', true) as $eqLogic) {
-			$eqLogic->updateInfo();
-			#$eqLogic->refreshWidget();
+	public static function CheckAndroidTV($_option)    {
+		$AndroidTV = eqLogic::byId($_option['id']);
+		if (is_object($AndroidTV) && $AndroidTV->getIsEnable()) {
+			$AndroidTV->updateInfo();
+			#$AndroidTV->refreshWidget();
 		}
 	}
 	public static function dependancy_info()    {
@@ -41,7 +42,7 @@ class AndroidTV extends eqLogic{
 		$return['launchable'] = 'ok';
 		$return['state'] = 'nok';
 		foreach(eqLogic::byType('AndroidTV') as $AndroidTV){
-			if(AndroidTV->getIsEnable() ){
+			if($AndroidTV->getIsEnable() ){
 				$cron = cron::byClassAndFunction('AndroidTV', 'CheckAndroidTV', array('id' => $AndroidTV->getId()));
 				if (!is_object($cron))	
 					return $return;
