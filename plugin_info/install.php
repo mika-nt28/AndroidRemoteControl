@@ -6,12 +6,8 @@ function AndroidTV_install() {
 }
 
 function AndroidTV_update() {
-    exec('../3rdparty/reset.sh');
 }
-
-
 function AndroidTV_remove() {
-    exec('../3rdparty/reset.sh');
     exec('../3rdparty/remove.sh');
 }
 
