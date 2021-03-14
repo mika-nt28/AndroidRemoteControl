@@ -341,14 +341,14 @@ class AndroidTV extends eqLogic{
 			$cmd->setDisplay('icon', 'plugins/AndroidTV/desktop/images/erreur.png');
 			$cmd->save();
 			//$this->connectADB($ip_address);
-			return false;
+			//return false;
 		} elseif (!strstr($check, "device")) {
 			$cmd = $this->getCmd(null, 'encours');
 			$cmd->setDisplay('icon', 'plugins/AndroidTV/desktop/images/erreur.png');
 			$cmd->save();
 			log::add('AndroidTV', 'info', $this->getHumanName() . ' Votre appareil n\'est pas détecté par ADB.');
 			$this->connectADB($ip_address);
-			return false;
+			//return false;
 		} elseif (strstr($check, "unauthorized")) {
 			$cmd = $this->getCmd(null, 'encours');
 			$cmd->setDisplay('icon', 'plugins/AndroidTV/desktop/images/erreur.png');
