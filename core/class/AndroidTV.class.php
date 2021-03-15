@@ -174,8 +174,8 @@ class AndroidTV extends eqLogic{
 		$this->addCmd("mute","action","other",array('categorie'=> "commande",'commande'=>"shell input keyevent 164"));
 		$this->addCmd("reboot","action","other",array('categorie'=> "commande",'commande'=>"shell reboot"));	
 		///////////////////////////////////////////////////  Création des commandes de raccourcis d'application///////////////////////////////////////////////
-		$this->addCmd("jellyfin","action","other",array('categorie'=> "appli",'icon'=>"jellyfin.png",'commande'=>"shell monkey -p org.jellyfin.androidtv -c android.intent.category.LAUNCHER 1"));|
-		$this->addCmd("vlc","action","other",array('categorie'=> "appli",'icon'=>"vlc.png",'commande'=>"shell monkey -p org.videolan.vlc -c android.intent.category.LAUNCHER 1"));|
+		$this->addCmd("jellyfin","action","other",array('categorie'=> "appli",'icon'=>"jellyfin.png",'commande'=>"shell monkey -p org.jellyfin.androidtv -c android.intent.category.LAUNCHER 1"));
+		$this->addCmd("vlc","action","other",array('categorie'=> "appli",'icon'=>"vlc.png",'commande'=>"shell monkey -p org.videolan.vlc -c android.intent.category.LAUNCHER 1"));
 		$this->addCmd("netflix","action","other",array('categorie'=> "appli",'icon'=>"netflix.png",'commande'=>"shell am start com.netflix.ninja/.MainActivity"));
 		$this->addCmd("youtube","action","other",array('categorie'=> "appli",'icon'=>"youtube.png",'commande'=>"shell monkey -p com.google.android.youtube.tv -c android.intent.category.LAUNCHER 1"));
 		$this->addCmd("plex","action","other",array('categorie'=> "appli",'icon'=>"plex.png",'commande'=>"shell monkey -p com.plexapp.android -c android.intent.category.LAUNCHER 1"));
@@ -243,8 +243,8 @@ class AndroidTV extends eqLogic{
 		log::add('AndroidTV', 'debug',$this->getHumanName() . " disk_free: " .$infos['disk_free'] );
 		$infos['disk_total'] = round(intval(substr($this->runcmd("shell dumpsys diskstats | grep Data-Free | cut -d' ' -f4"), 0, -1))/1000000, 1);
 		log::add('AndroidTV', 'debug', "disk_total: " .$infos['disk_total']);
-		$infos['title'] = substr($this->runcmd("shell dumpsys media_session | grep -E 'metadata' | cut -d '=' -f3 | cut -d ',' -f1"), 0);|
-		log::add('AndroidTV', 'debug', $this->getHumanName() . "title: " .$infos['title']);|
+		$infos['title'] = substr($this->runcmd("shell dumpsys media_session | grep -E 'metadata' | cut -d '=' -f3 | cut -d ',' -f1"), 0);
+		log::add('AndroidTV', 'debug', $this->getHumanName() . "title: " .$infos['title']);
 		//$infos['volume'] = substr($this->runcmd("shell media volume --stream 3 --get | grep volume |grep is | cut -d -f4"), 0, -1);
 		//log::add('AndroidTV', 'debug',$this->getHumanName() . "volume: " .$infos['volume']);
 		$infos['play_state']  = substr($this->runcmd("shell dumpsys bluetooth_manager | grep mCurrentPlayState | cut -d,  -f1 | cut -c43-"), 0, -1);
