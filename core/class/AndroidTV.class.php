@@ -244,7 +244,7 @@ class AndroidTV extends eqLogic{
 		log::add('AndroidTV', 'debug',$this->getHumanName() . " disk_free: " .$infos['disk_free'] );
 		$infos['disk_total'] = round(intval(substr($this->runcmd("shell dumpsys diskstats | grep Data-Free | cut -d' ' -f4"), 0, -1))/1000000, 1);
 		log::add('AndroidTV', 'debug', "disk_total: " .$infos['disk_total']);
-		$infos['title'] = substr($this->runcmd("shell dumpsys media_session | grep -E 'metadata' | cut -d '=' -f3 | cut -d ',' -f1 | grep -v 'null'"), 0);
+		$infos['title'] = substr($this->runcmd("shell dumpsys media_session | grep -A 11 '".$infos['encours']."' | grep 'metadata' | cut -d '=' -f3 | cut -d ',' -f1 | grep -Ev '^null$'"), 0);
 		log::add('AndroidTV', 'debug', $this->getHumanName() . "title: " .$infos['title']);
 		//$infos['volume'] = substr($this->runcmd("shell media volume --stream 3 --get | grep volume |grep is | cut -d -f4"), 0, -1);
 		//log::add('AndroidTV', 'debug',$this->getHumanName() . "volume: " .$infos['volume']);
@@ -343,7 +343,7 @@ class AndroidTV extends eqLogic{
 			log::add('AndroidTV', 'info',$this->getHumanName() . ' Votre appareil est offline');
 			$cmd->setDisplay('icon', 'plugins/AndroidTV/desktop/images/erreur.png');
 			$cmd->save();
-			//$this->connectADB($ip_address);
+			$this->connectADB($ip_address);
 			//return false;
 		} elseif (!strstr($check, "device")) {
 			$cmd = $this->getCmd(null, 'encours');
