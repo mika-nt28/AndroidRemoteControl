@@ -409,16 +409,14 @@ class AndroidTVCmd extends cmd{
 		if ($sudo != "0")
 		$sudo_prefix = "sudo ";
 		$ip_address = $ARC->getConfiguration('ip_address');
-		$commande = $this->getConfiguration('commande')
-		
-
-		switch (stristr($this->getLogicalId()){
+		$commande = $this->getConfiguration('commande');
+		switch ($this->getLogicalId()){
 			case 'setVolume':
 				shell_exec($sudo_prefix . "adb -s ".$ip_address.":5555 shell media volume --stream 3  --set " . $_options['slider']);
 			break;
 			case 'chaine':
 				foreach(str_split($_options['slider']) as $touche){
-					$commande = str_replace('#Chaine#',$touche+7)
+					$commande = str_replace('#Chaine#',$touche+7);
 					log::add('AndroidTV', 'info',$this->getHumanName() . ' Command ' . $commande . ' sent to android device at ip address : ' . $ip_address);
 				}
 			break;
