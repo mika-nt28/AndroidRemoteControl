@@ -160,7 +160,7 @@ class AndroidTV extends eqLogic{
 		$this->addCmd("battery_status","info","string",array('categorie'=> "commande"));
 		$this->addCmd("mainmenu","action","other",array('categorie'=> "commande",'commande'=>"shell input keyevent 3"));
 		$this->addCmd("power_set","action","other",array('categorie'=> "commande",'commande'=>"shell input keyevent 26"));
-		$this->addCmd("chaine","action","numeric",array('categorie'=> "commande",'commande'=>"shell input keyevent #Chaine#"));
+		$this->addCmd("chaine","action","slider",array('categorie'=> "commande",'commande'=>"shell input keyevent #Chaine#"));
 		$this->addCmd("play","action","other",array('categorie'=> "commande",'commande'=>"shell input keyevent 85"));
 		$this->addCmd("stop","action","other",array('categorie'=> "commande",'commande'=>"shell input keyevent 86"));
 		$this->addCmd("up","action","other",array('categorie'=> "commande",'commande'=>"shell input keyevent 19"));
