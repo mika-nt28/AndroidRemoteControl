@@ -160,7 +160,7 @@ class AndroidTV extends eqLogic{
 		$this->addCmd("battery_status","info","string",array('categorie'=> "commande"));
 		$this->addCmd("mainmenu","action","other",array('categorie'=> "commande",'commande'=>"shell input keyevent 3"));
 		$this->addCmd("power_set","action","other",array('categorie'=> "commande",'commande'=>"shell input keyevent 26"));
-		$this->addCmd("chaine","action","numeric",array('categorie'=> "commande",'commande'=>"shell input keyevent #Chaine#"));
+		$this->addCmd("chaine","action","slider",array('categorie'=> "commande",'commande'=>"shell input keyevent #Chaine#"));
 		$this->addCmd("play","action","other",array('categorie'=> "commande",'commande'=>"shell input keyevent 85"));
 		$this->addCmd("stop","action","other",array('categorie'=> "commande",'commande'=>"shell input keyevent 86"));
 		$this->addCmd("up","action","other",array('categorie'=> "commande",'commande'=>"shell input keyevent 19"));
@@ -409,17 +409,15 @@ class AndroidTVCmd extends cmd{
 		if ($sudo != "0")
 		$sudo_prefix = "sudo ";
 		$ip_address = $ARC->getConfiguration('ip_address');
-		$commande = $this->getConfiguration('commande')
-		
-
-		switch (stristr($this->getLogicalId()){
+		$commande = $this->getConfiguration('commande');
+		switch ($this->getLogicalId()){
 			case 'setVolume':
 				shell_exec($sudo_prefix . "adb -s ".$ip_address.":5555 shell media volume --stream 3  --set " . $_options['slider']);
 			break;
 			case 'chaine':
 				foreach(str_split($_options['slider']) as $touche){
-					$commande = str_replace('#Chaine#',$touche+7)
-					log::add('AndroidTV', 'info',$this->getHumanName() . ' Command ' . $commande . ' sent to android device at ip address : ' . $ip_address);
+					log::add('AndroidTV', 'info',$this->getHumanName() . ' Command ' . str_replace('#Chaine#',$touche+7,$commande) . ' sent to android device at ip address : ' . $ip_address);
+					shell_exec($sudo_prefix . "adb -s ".$ip_address.":5555 " . str_replace('#Chaine#',$touche+7,$commande));
 				}
 			break;
 			default:
