@@ -1,6 +1,5 @@
 <?php
 require_once __DIR__ . '/../../../../core/php/core.inc.php';
-require_once "AndroidTVCmd.class.php";
 
 class AndroidTV extends eqLogic{
 	public static $_widgetPossibility = array(
@@ -161,6 +160,7 @@ class AndroidTV extends eqLogic{
 		$this->addCmd("battery_status","info","string",array('categorie'=> "commande"));
 		$this->addCmd("mainmenu","action","other",array('categorie'=> "commande",'commande'=>"shell input keyevent 3"));
 		$this->addCmd("power_set","action","other",array('categorie'=> "commande",'commande'=>"shell input keyevent 26"));
+		$this->addCmd("chaine","action","numeric",array('categorie'=> "commande",'commande'=>"shell input keyevent #Chaine#"));
 		$this->addCmd("play","action","other",array('categorie'=> "commande",'commande'=>"shell input keyevent 85"));
 		$this->addCmd("stop","action","other",array('categorie'=> "commande",'commande'=>"shell input keyevent 86"));
 		$this->addCmd("up","action","other",array('categorie'=> "commande",'commande'=>"shell input keyevent 19"));
@@ -398,5 +398,35 @@ class AndroidTV extends eqLogic{
 		}
 		$replace['#ip#'] = $this->getConfiguration('ip_address');
 		return $this->postToHtml($_version, template_replace($replace, getTemplate('core', $version, 'eqLogic', 'AndroidTV')));
+	}
+}
+class AndroidTVCmd extends cmd{
+	public function execute($_options = null){
+		$ARC = $this->getEqLogic();
+		$ARC->checkAndroidTVStatus();
+
+		$sudo = exec("\$EUID");
+		if ($sudo != "0")
+		$sudo_prefix = "sudo ";
+		$ip_address = $ARC->getConfiguration('ip_address');
+		$commande = $this->getConfiguration('commande')
+		
+
+		switch (stristr($this->getLogicalId()){
+			case 'setVolume':
+				shell_exec($sudo_prefix . "adb -s ".$ip_address.":5555 shell media volume --stream 3  --set " . $_options['slider']);
+			break;
+			case 'chaine':
+				foreach(str_split($_options['slider']) as $touche){
+					$commande = str_replace('#Chaine#',$touche+7)
+					log::add('AndroidTV', 'info',$this->getHumanName() . ' Command ' . $commande . ' sent to android device at ip address : ' . $ip_address);
+				}
+			break;
+			default:
+				log::add('AndroidTV', 'info',$this->getHumanName() . ' Command ' . $commande . ' sent to android device at ip address : ' . $ip_address);
+				shell_exec($sudo_prefix . "adb -s ".$ip_address.":5555 " . $commande);
+			break;
+		}
+		$ARC->updateInfo();
 	}
 }
