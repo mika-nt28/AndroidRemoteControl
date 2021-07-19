@@ -16,6 +16,7 @@ $sudo_prefix apt-get -y update
 echo 50 > /tmp/AndroidTV_dep
 
 $sudo_prefix apt-get -y install android-tools-adb
+$sudo_prefix apt-get install -y wakeonlan 
 
 echo 75 > /tmp/AndroidTV_dep
 $sudoPrefix adb start-server
