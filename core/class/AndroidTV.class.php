@@ -97,6 +97,7 @@ class AndroidTV extends eqLogic{
 		if ($type_connection == "TCPIP") {
 			$data = shell_exec($sudo_prefix . "adb -s ".$ip_address.":5555 " . $_cmd);
 			return $data;
+
 		}elseif ($type_connection == "TCPIP") {
 			$data = shell_exec($sudo_prefix . "adb " . $_cmd);
 			return $data;
@@ -146,20 +147,26 @@ class AndroidTV extends eqLogic{
 	}
 	public function postSave() {
 		////////////////////////////////////////////////////////////  Création des commandes /////////////////////////////////////////////////////////////////
-		$this->addCmd("disk_total","info","string",array('categorie'=> "commande"));
-		$this->addCmd("disk_free","info","string",array('categorie'=> "commande"));
-		$this->addCmd("resolution","info","string",array('categorie'=> "commande"));
-		$this->addCmd("type","info","string",array('categorie'=> "commande"));
-		$this->addCmd("version_android","info","string",array('categorie'=> "commande"));
-		$this->addCmd("name","info","string",array('categorie'=> "commande"));
-		$this->addCmd("power_state","info","binary",array('categorie'=> "commande"));
-		$this->addCmd("encours","info","string",array('categorie'=> "commande"));
-		$this->addCmd("title","info","string",array('categorie'=> "commande"));
-		$this->addCmd("play_state","info","string",array('categorie'=> "commande"));
-		$this->addCmd("battery_level","info","numeric",array('categorie'=> "commande"));
-		$this->addCmd("battery_status","info","string",array('categorie'=> "commande"));
+		////////////////////////////////////////////////////////////  Commandes Info      ////////////////////////////////////////////////////////////////////
+		$this->addCmd("disk_total","info","string",array('categorie'=> "info"));
+		$this->addCmd("disk_free","info","string",array('categorie'=> "info"));
+		$this->addCmd("resolution","info","string",array('categorie'=> "info"));
+		$this->addCmd("type","info","string",array('categorie'=> "info"));
+		$this->addCmd("version_android","info","string",array('categorie'=> "info"));
+		$this->addCmd("name","info","string",array('categorie'=> "info"));
+		$this->addCmd("power_state","info","binary",array('categorie'=> "info"));
+		$this->addCmd("encours","info","string",array('categorie'=> "info"));
+		$this->addCmd("title","info","string",array('categorie'=> "info"));
+		$this->addCmd("play_state","info","string",array('categorie'=> "info"));
+		$this->addCmd("battery_level","info","numeric",array('categorie'=> "info"));
+		$this->addCmd("battery_status","info","string",array('categorie'=> "info"));
+		$this->addCmd("volume_status","info","string",array('categorie'=> "info"));
+		////////////////////////////////////////////////////////////  Commandes Info      ////////////////////////////////////////////////////////////////////
+		////////////////////////////////////////////////////////////  Commandes action    ////////////////////////////////////////////////////////////////////
 		$this->addCmd("mainmenu","action","other",array('categorie'=> "commande",'commande'=>"shell input keyevent 3"));
 		$this->addCmd("power_set","action","other",array('categorie'=> "commande",'commande'=>"shell input keyevent 26"));
+		$this->addCmd("Off","action","other",array('categorie'=> "commande",'commande'=>"shell input keyevent 26"));
+		$this->addCmd("On","action","other",array('categorie'=> "commande",'commande'=>"on"));
 		$this->addCmd("chaine","action","slider",array('categorie'=> "commande",'commande'=>"shell input #Chaine#"));
 		$this->addCmd("play","action","other",array('categorie'=> "commande",'commande'=>"shell input keyevent 85"));
 		$this->addCmd("stop","action","other",array('categorie'=> "commande",'commande'=>"shell input keyevent 86"));
@@ -171,8 +178,19 @@ class AndroidTV extends eqLogic{
 		$this->addCmd("enter","action","other",array('categorie'=> "commande",'commande'=>"shell input keyevent 23"));
 		$this->addCmd("volume+","action","other",array('categorie'=> "commande",'commande'=>"shell input keyevent 24"));
 		$this->addCmd("volume-","action","other",array('categorie'=> "commande",'commande'=>"shell input keyevent 25"));
+		$this->addCmd("chaine+","action","other",array('categorie'=> "commande",'commande'=>"shell input keyevent 166"));
+		$this->addCmd("chaine-","action","other",array('categorie'=> "commande",'commande'=>"shell input keyevent 167"));
 		$this->addCmd("mute","action","other",array('categorie'=> "commande",'commande'=>"shell input keyevent 164"));
-		$this->addCmd("reboot","action","other",array('categorie'=> "commande",'commande'=>"shell reboot"));	
+		$this->addCmd("reboot","action","other",array('categorie'=> "commande",'commande'=>"shell reboot"));
+		$volume=$this->addCmd('volume','info','numeric',array('categorie'=> 'info'),'%');
+	  	$this->addCmd("setVolume","action","slider",array("categorie"=> "commande",'commande'=>""),'',$volume->getId());
+	  	////////////////////////////////////////////////////////////  Commandes action    ////////////////////////////////////////////////////////////////////
+	  	////////////////////////////////////////////////////////////  Commandes HDMI      ////////////////////////////////////////////////////////////////////
+	  	$this->addCmd("HDMI1","action","other",array('categorie'=> "hdmi",'icon'=>"HDMI.png",'commande'=>"shell am start -a android.intent.action.VIEW -d content://android.media.tv/passthrough/com.mediatek.tvinput%2F.hdmi.HDMIInputService%2FHW5 -n org.droidtv.playtv/.PlayTvActivity -f 0x10000000"));
+	  	$this->addCmd("HDMI2","action","other",array('categorie'=> "hdmi",'icon'=>"HDMI.png",'commande'=>"shell am start -a android.intent.action.VIEW -d content://android.media.tv/passthrough/com.mediatek.tvinput%2F.hdmi.HDMIInputService%2FHW6 -n org.droidtv.playtv/.PlayTvActivity -f 0x10000000"));	
+	  	$this->addCmd("HDMI3","action","other",array('categorie'=> "hdmi",'icon'=>"HDMI.png",'commande'=>"shell am start -a android.intent.action.VIEW -d content://android.media.tv/passthrough/com.mediatek.tvinput%2F.hdmi.HDMIInputService%2FHW7 -n org.droidtv.playtv/.PlayTvActivity -f 0x10000000"));	
+	  	$this->addCmd("HDMI4","action","other",array('categorie'=> "hdmi",'icon'=>"HDMI.png",'commande'=>"shell am start -a android.intent.action.VIEW -d content://android.media.tv/passthrough/com.mediatek.tvinput%2F.hdmi.HDMIInputService%2FHW8 -n org.droidtv.playtv/.PlayTvActivity -f 0x10000000"));
+	  	////////////////////////////////////////////////////////////  Commandes HDMI      ////////////////////////////////////////////////////////////////////	
 		///////////////////////////////////////////////////  Création des commandes de raccourcis d'application///////////////////////////////////////////////
 		$this->addCmd("tvmosaic","action","other",array('categorie'=> "appli",'icon'=>"tvmosaic.png",'commande'=>"shell monkey -p com.dvblogic.tvmosaic -c android.intent.category.LAUNCHER 1"));
 		$this->addCmd("jellyfin","action","other",array('categorie'=> "appli",'icon'=>"jellyfin.png",'commande'=>"shell monkey -p org.jellyfin.androidtv -c android.intent.category.LAUNCHER 1"));
@@ -180,30 +198,33 @@ class AndroidTV extends eqLogic{
 		$this->addCmd("netflix","action","other",array('categorie'=> "appli",'icon'=>"netflix.png",'commande'=>"shell am start com.netflix.ninja/.MainActivity"));
 		$this->addCmd("youtube","action","other",array('categorie'=> "appli",'icon'=>"youtube.png",'commande'=>"shell monkey -p com.google.android.youtube.tv -c android.intent.category.LAUNCHER 1"));
 		$this->addCmd("plex","action","other",array('categorie'=> "appli",'icon'=>"plex.png",'commande'=>"shell monkey -p com.plexapp.android -c android.intent.category.LAUNCHER 1"));
+		//$this->addCmd("plex","action","other",array('categorie'=> "appli",'icon'=>"plex.png",'commande'=>"shell am start -a android.intent.action.VIEW -n com.plexapp.android/com.plexapp.plex.activities.SplashActivity"));
 		$this->addCmd("kodi","action","other",array('categorie'=> "appli",'icon'=>"kodi.png",'commande'=>"shell monkey -p org.xbmc.kodi -c android.intent.category.LAUNCHER 1"));
+		$this->addCmd("disney","action","other",array('categorie'=> "appli",'icon'=>"disney.png",'commande'=>"shell monkey -p com.disney.disneyplus -c android.intent.category.LAUNCHER 1"));
+		$this->addCmd("rakutentv","action","other",array('categorie'=> "appli",'icon'=>"rakutentv.png",'commande'=>"shell monkey -p tv.wuaki.apptv -c android.intent.category.LAUNCHER 1"));
 		$this->addCmd("molotov","action","other",array('categorie'=> "appli",'icon'=>"molotov.png",'commande'=>"shell monkey -p tv.molotov.app -c android.intent.category.LAUNCHER 1"));
 		$this->addCmd("spotify","action","other",array('categorie'=> "appli",'icon'=>"spotify.png",'commande'=>"shell monkey -p com.spotify.tv.android -c android.intent.category.LAUNCHER 1"));
-		$this->addCmd("amazonvideo","action","other",array('categorie'=> "appli",'icon'=>"amazonvideo.png",'commande'=>"shell monkey -p com.amazon.amazonvideo.livingroom.nvidia -c android.intent.category.LAUNCHER 1"));
-		$this->addCmd("vevo","action","other",array('categorie'=> "appli",'icon'=>"vevo.png",'commande'=>"shell monkey -p com.vevo -c android.intent.category.LAUNCHER 1"));
-		$this->addCmd("mytf1","action","other",array('categorie'=> "appli",'icon'=>"tf1.png",'commande'=>"shell monkey -p fr.tf1.mytf1 -c android.intent.category.LAUNCHER 1"));
+		//$this->addCmd("amazonvideo","action","other",array('categorie'=> "appli",'icon'=>"amazonvideo.png",'commande'=>"shell monkey -p com.amazon.amazonvideo.livingroom.nvidia -c android.intent.category.LAUNCHER 1"));
+      	$this->addCmd("amazonvideo","action","other",array('categorie'=> "appli",'icon'=>"amazonvideo.png",'commande'=>"shell am start -a android.intent.action.VIEW -n com.amazon.amazonvideo.livingroom/com.amazon.ignition.IgnitionActivity"));
+		$this->addCmd("vevo","action","other",array('categorie'=> "appli",'icon'=>"vevo.jpg",'commande'=>"shell monkey -p com.vevo -c android.intent.category.LAUNCHER 1"));
+		$this->addCmd("mytf1","action","other",array('categorie'=> "appli",'icon'=>"mytf1.png",'commande'=>"shell monkey -p fr.tf1.mytf1 -c android.intent.category.LAUNCHER 1"));
 		$this->addCmd("m6replay","action","other",array('categorie'=> "appli",'icon'=>"m6replay.png",'commande'=>"shell monkey -p fr.m6.m6replay.by -c android.intent.category.LAUNCHER 1"));
 		$this->addCmd("dsvideo","action","other",array('categorie'=> "appli",'icon'=>"dsvideo.png",'commande'=>"shell monkey -p com.synology.dsvideo -c android.intent.category.LAUNCHER 1"));
 		$this->addCmd("ted","action","other",array('categorie'=> "appli",'icon'=>"ted.png",'commande'=>"shell monkey -p com.ted.android.tv -c android.intent.category.LAUNCHER 1"));
-		$this->addCmd("leanback","action","other",array('categorie'=> "appli",'icon'=>"home.png",'commande'=>"shell input keyevent 3"));
-		$this->addCmd("tvlauncher","action","other",array('categorie'=> "appli",'icon'=>"home.png",'commande'=>"shell input keyevent 3"));
+		$this->addCmd("leanback","action","other",array('categorie'=> "appli",'icon'=>"home1.png",'commande'=>"shell input keyevent 3"));
+		$this->addCmd("tvlauncher","action","other",array('categorie'=> "appli",'icon'=>"home1.png",'commande'=>"shell input keyevent 3"));
 		$this->addCmd("zapster","action","other",array('categorie'=> "appli",'icon'=>"freeboxtv.jpg",'commande'=>"shell am start org.droidtv.zapster/.playtv.activity.PlayTvActivity"));
 		$this->addCmd("freebox","action","other",array('categorie'=> "appli",'icon'=>"freeboxtv.jpg",'commande'=>"shell monkey -p fr.freebox.tv -c android.intent.category.LAUNCHER 1"));
 		$this->addCmd("mycanal","action","other",array('categorie'=> "appli",'icon'=>"mycanal.png",'commande'=>"shell monkey -p com.canal.android.canal -c android.intent.category.LAUNCHER 1"));
 		$this->addCmd("stb.emu","action","other",array('categorie'=> "appli",'icon'=>"television.png",'commande'=>"shell monkey -p com.mvas.stb.emu.pro -c android.intent.category.LAUNCHER 1"));
-		$this->addCmd("deezer","action","other",array('categorie'=> "appli",'icon'=>"deezer.png",'commande'=>"shell monkey -p  -c android.intent.category.LAUNCHER 1"));
+		$this->addCmd("deezer","action","other",array('categorie'=> "appli",'icon'=>"deezer.png",'commande'=>"shell monkey -p  deezer.android.tv -c android.intent.category.LAUNCHER 1"));
 		$this->addCmd("tinycam free","action","other",array('categorie'=> "appli",'icon'=>"tinycamfree.png",'commande'=>"shell monkey -p com.alexvas.dvr -c android.intent.category.LAUNCHER 1"));
 		$this->addCmd("tinycam pro","action","other",array('categorie'=> "appli",'icon'=>"tinycampro.png",'commande'=>"shell monkey -p com.alexvas.dvr.pro -c android.intent.category.LAUNCHER 1"));
-		$this->addCmd("mediashell","action","other",array('categorie'=> "appli",'icon'=>"home.png",'commande'=>""));
+		$this->addCmd("mediashell","action","other",array('categorie'=> "appli",'icon'=>"home1.png",'commande'=>""));
 		$this->addCmd("Freebox by Oqee","action","other",array('categorie'=> "appli",'icon'=>"freeboxtv.jpg",'commande'=>"am start -n net.oqee.androidtv/.ui.main.MainActivity"));
-		
-		$volume=$this->addCmd('Volume','info','numeric',array('categorie'=> 'commande'),'%');
-		$this->addCmd('setVolume','action','slider',array('categorie'=> 'commande'),'',$volume->getId());
 
+
+		
 		$sudo = exec("\$EUID");
 		if ($sudo != "0")
 		$sudo_prefix = "sudo ";
@@ -228,10 +249,14 @@ class AndroidTV extends eqLogic{
 		if ($sudo != "0")
 			$sudo_prefix = "sudo ";
 		$ip_address = $this->getConfiguration('ip_address');
+		$mac_address = $this->getConfiguration('mac_address');
+	
 		$infos['power_state'] = substr($this->runcmd("shell dumpsys power -h | grep \"Display Power\" | cut -c22-"), 0, -1);
 		log::add('AndroidTV', 'debug', $this->getHumanName() . " power_state: " . $infos['power_state']);
 		$infos['encours']     = substr($this->runcmd("shell dumpsys window windows | grep -E 'mFocusedApp'| cut -d / -f 1 | cut -d ' ' -f 7"), 0, -1);
 		log::add('AndroidTV', 'debug', $this->getHumanName() . " encours: " .$infos['encours'] );
+      	$infos['App encours']     = substr($this->runcmd("shell dumpsys window windows | grep -E 'mFocusedApp'| cut -d / -f 1 | cut -d ' ' -f 7 | cut -d '.' -f2"), 0, -1);
+		log::add('AndroidTV', 'debug', $this->getHumanName() . " App encours: " .$infos['App encours'] );
 		$infos['version_android']     = substr($this->runcmd("shell getprop ro.build.version.release"), 0, -1);
 		log::add('AndroidTV', 'debug', $this->getHumanName() . " version_android: " .$infos['version_android'] );
 		$infos['name']        = substr($this->runcmd("shell getprop ro.product.model"), 0, -1);
@@ -240,14 +265,14 @@ class AndroidTV extends eqLogic{
 		log::add('AndroidTV', 'debug', $this->getHumanName() . " type: " .$infos['type']);
 		$infos['resolution']  = substr($this->runcmd("shell dumpsys window displays | grep init | cut -c45-53"), 0, -1);
 		log::add('AndroidTV', 'debug', $this->getHumanName() . " resolution: " .$infos['resolution'] );
-		$infos['disk_free'] = substr($this->runcmd("shell dumpsys diskstats | grep Data-Free | cut -d' ' -f7"), 0, -1);
+		$infos['disk_free']   = substr($this->runcmd("shell dumpsys diskstats | grep Data-Free | cut -d' ' -f7"), 0, -1);
 		log::add('AndroidTV', 'debug',$this->getHumanName() . " disk_free: " .$infos['disk_free'] );
-		$infos['disk_total'] = round(intval(substr($this->runcmd("shell dumpsys diskstats | grep Data-Free | cut -d' ' -f4"), 0, -1))/1000000, 1);
-		log::add('AndroidTV', 'debug', "disk_total: " .$infos['disk_total']);
+		$infos['disk_total']  = round(intval(substr($this->runcmd("shell dumpsys diskstats | grep Data-Free | cut -d' ' -f4"), 0, -1))/1000000, 1);
+		log::add('AndroidTV', 'debug',$this->getHumanName() . " disk_total: " .$infos['disk_total']);
 		$infos['title'] = substr($this->runcmd("shell dumpsys media_session | grep -A 11 '".$infos['encours']."' | grep 'metadata' | cut -d '=' -f3 | cut -d ',' -f1 | grep -Ev '^null$'"), 0);
-		log::add('AndroidTV', 'debug', $this->getHumanName() . "title: " .$infos['title']);
-		//$infos['volume'] = substr($this->runcmd("shell media volume --stream 3 --get | grep volume |grep is | cut -d -f4"), 0, -1);
-		//log::add('AndroidTV', 'debug',$this->getHumanName() . "volume: " .$infos['volume']);
+		log::add('AndroidTV', 'debug', $this->getHumanName() . " title: " .$infos['title']);
+		$infos['volume_status'] = substr($this->runcmd("shell media volume --stream 3 --get | grep volume |grep is | cut -d' ' -f4"), 0, -1);
+		log::add('AndroidTV', 'debug',$this->getHumanName() . " volume: " .$infos['volume_status']);
 		$infos['play_state']  = substr($this->runcmd("shell dumpsys bluetooth_manager | grep mCurrentPlayState | cut -d,  -f1 | cut -c43-"), 0, -1);
 		log::add('AndroidTV', 'debug',  $this->getHumanName() . " play_state: " .$infos['play_state'] );
 		$infos['battery_level']  = substr($this->runcmd("shell dumpsys battery | grep level | cut -d: -f2"), 0, -1);
@@ -271,12 +296,26 @@ class AndroidTV extends eqLogic{
 			$this->checkAndUpdateCmd('power_state', ($infos['power_state'] == "ON") ? 1 : 0 );
 		if (isset($infos['encours'])) {
 			$encours = $this->getCmd(null, 'encours');
+          
+ 			//Remplacement de wuaki par rakutentv car app tv.wuaki.apptv = rakutentv
+         	if (stristr($infos['encours'], 'wuaki')){
+              	$infos['encours'] = str_replace("wuaki","rakutentv",$infos['encours']);
+          		log::add('AndroidTV', 'debug', 'Remplacement wuaki par rakutentv car app tv.wuaki.apptv = rakutentv '.$infos['encours']);
+            }
+          	
 			$app_known = 0;
 			foreach ($this->getCmd() as $cmd) {
 				if (stristr($infos['encours'], $cmd->getName())){
-					$encours->setDisplay('icon', 'plugins/AndroidTV/desktop/images/'.$cmd->getConfiguration('icon'));
-					$this->checkAndUpdateCmd('encours', $cmd->getName());
-					$app_known = 1;
+                  	if (stristr($infos['encours'], 'playtv')){
+                      	$encours->setDisplay('icon', 'plugins/AndroidTV/desktop/images/'.$infos['title'].'.png');
+						$this->checkAndUpdateCmd('encours', $cmd->getName());
+						$app_known = 1;
+                        
+                    }else{
+						$encours->setDisplay('icon', 'plugins/AndroidTV/desktop/images/'.$cmd->getConfiguration('icon'));
+						$this->checkAndUpdateCmd('encours', $cmd->getName());
+						$app_known = 1;
+                    }
 				}
 			}
 			if (!$app_known) 
@@ -297,8 +336,8 @@ class AndroidTV extends eqLogic{
 			$this->checkAndUpdateCmd('disk_total', $infos['disk_total']);
 		if (isset($infos['title'])) 
 			$this->checkAndUpdateCmd('title', $infos['title']);
-		if (isset($infos['volume']))
-			$this->checkAndUpdateCmd('Volume', $infos['volume']);
+		if (isset($infos['volume_status']))
+			$this->checkAndUpdateCmd('volume_status', $infos['volume_status']);
 		if (isset($infos['play_state'])) {
 			if ($infos['play_state'] == 2) 
 				$this->checkAndUpdateCmd('play_state', "pause");
@@ -349,7 +388,7 @@ class AndroidTV extends eqLogic{
 			$cmd = $this->getCmd(null, 'encours');
 			$cmd->setDisplay('icon', 'plugins/AndroidTV/desktop/images/erreur.png');
 			$cmd->save();
-			log::add('AndroidTV', 'info', $this->getHumanName() . ' Votre appareil n\'est pas détecté par ADB.');
+			log::add('AndroidTV', 'info', $this->getHumanName() . ' Votre appareil n\'est pas détecté par ADB ou en veille profonde.');
 			$this->connectADB($ip_address);
 			//return false;
 		} elseif (strstr($check, "unauthorized")) {
@@ -376,7 +415,7 @@ class AndroidTV extends eqLogic{
 			if ($cmd->getLogicalId() == 'encours')
 				$replace['#thumbnail#'] = $cmd->getDisplay('icon');
 			if ($cmd->getLogicalId() == 'play_state'){
-				if($cmd->execCmd() == 'play')
+				if($cmd->execCmd() == 'lecture')
 					$replace['#play_pause#'] = '"fa fa-pause  fa-lg" style="color:green"';
 				else
 					$replace['#play_pause#'] = '"fa fa-play  fa-lg"';
@@ -389,7 +428,17 @@ class AndroidTV extends eqLogic{
 		$replace['#applis#'] = "";
 		foreach ($this->getCmd('action') as $cmd) {
 			if ($cmd->getConfiguration('categorie') == 'appli'){
-				$replace['#applis#'] = $replace['#applis#'] . '<a class="btn cmd icons noRefresh" style="display:#'.$cmd->getLogicalId().'_id_display#; padding:3px" data-cmd_id="'.$cmd->getId().'" title="'.$cmd->getName().'" onclick="jeedom.cmd.execute({id: '.$cmd->getId().'});"><img src="plugins/AndroidTV/desktop/images/'.$cmd->getConfiguration('icon') .'"></a>';
+				$replace['#applis#'] = $replace['#applis#'] . '<a class="btn cmd icons noRefresh" style="display:#'.$cmd->getLogicalId().'_id_display#; padding:3px; margin-top: 6px !important;margin-bottom: 12px;background: transparent !important;" data-cmd_id="'.$cmd->getId().'" title="'.$cmd->getName().'" onclick="jeedom.cmd.execute({id: '.$cmd->getId().'});"><img src="plugins/AndroidTV/desktop/images/'.$cmd->getConfiguration('icon') .'"></a>';
+			}else{
+				$replace['#' . $cmd->getLogicalId() . '_id#'] = $cmd->getId();
+				$replace['#' . $cmd->getLogicalId() . '_id_display#'] = (is_object($cmd) && $cmd->getIsVisible()) ? '#' . $cmd->getId() . "_id_display#" : 'none';
+			}
+			$replace['#' . $cmd->getLogicalId() . '_id_display#'] = ($cmd->getIsVisible()) ? '#' . $cmd->getLogicalId() . "_id_display#" : "none";
+		}
+		$replace['#hdmis#'] = "";
+		foreach ($this->getCmd('action') as $cmd) {
+			if ($cmd->getConfiguration('categorie') == 'hdmi'){
+				$replace['#hdmis#'] = $replace['#hdmis#'] . '<a class="btn cmd icons noRefresh" style="display:#'.$cmd->getLogicalId().'_id_display#;background: transparent !important;color: white !important;padding:3px; margin-top: 6px !important;margin-bottom: 12px;" data-cmd_id="'.$cmd->getId().'" title="'.$cmd->getName().'" onclick="jeedom.cmd.execute({id: '.$cmd->getId().'});">'.$cmd->getName().'<br><br><img src="plugins/AndroidTV/desktop/images/'.$cmd->getConfiguration('icon') .' " style="width:40px"></a>';
 			}else{
 				$replace['#' . $cmd->getLogicalId() . '_id#'] = $cmd->getId();
 				$replace['#' . $cmd->getLogicalId() . '_id_display#'] = (is_object($cmd) && $cmd->getIsVisible()) ? '#' . $cmd->getId() . "_id_display#" : 'none';
@@ -397,6 +446,8 @@ class AndroidTV extends eqLogic{
 			$replace['#' . $cmd->getLogicalId() . '_id_display#'] = ($cmd->getIsVisible()) ? '#' . $cmd->getLogicalId() . "_id_display#" : "none";
 		}
 		$replace['#ip#'] = $this->getConfiguration('ip_address');
+		$replace['#mac#'] = $this->getConfiguration('mac_address');
+      	
 		return $this->postToHtml($_version, template_replace($replace, getTemplate('core', $version, 'eqLogic', 'AndroidTV')));
 	}
 }
@@ -409,6 +460,7 @@ class AndroidTVCmd extends cmd{
 		if ($sudo != "0")
 		$sudo_prefix = "sudo ";
 		$ip_address = $ARC->getConfiguration('ip_address');
+    	$mac_address = $ARC->getConfiguration('mac_address');
 		$commande = $this->getConfiguration('commande');
 		switch ($this->getLogicalId()){
 			case 'setVolume':
@@ -423,9 +475,18 @@ class AndroidTVCmd extends cmd{
 				}
 				$commande = str_replace('#Chaine#',trim($keyevent),$commande);
 			break;
+
 		}
-		log::add('AndroidTV', 'info',$this->getHumanName() . ' Command "' . $commande . '" sent to android device at ip address : ' . $ip_address);
-		shell_exec($sudo_prefix . "adb -s ".$ip_address.":5555 " . $commande);
-		$ARC->updateInfo();
+		
+      
+        if ($commande == "on"){
+      		$action= shell_exec($sudo_prefix . " wakeonlan " . $mac_address. " -i " . $ip_address . " && sleep 20 && " . $sudo_prefix . "adb -s ".$ip_address.":5555 shell input keyevent 3");
+      		log::add('AndroidTV', 'info',$this->getHumanName() . ' Command ' . $action );
+
+    	}else{
+      		log::add('AndroidTV', 'info',$this->getHumanName() . ' Command "' . $commande . '" sent to android device at ip address : ' . $ip_address);
+			shell_exec($sudo_prefix . "adb -s ".$ip_address.":5555 " . $commande);
+			$ARC->updateInfo();
+        }
 	}
 }
