@@ -1,33 +1,37 @@
 .AndroidTV_widget {
-    width: 250px;
-    height: 340px;
+    width: 250px !important;
+    height: 340px !important;
     font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    background-color: black;
+    background-color: rgb(48, 88, 113) !important;
     overflow: hidden;
     position: relative;
     z-index: 1;
 }
 
 .AndroidTV_widget .uppart {
-    height: 280px;
+    height: 260px;
     width: 250px;
     z-index: 2;
 }
 
 .AndroidTV_widget .power_set {
     position: absolute;
-    top: 2px;
+    top: 7px;
     right: 5px;
     cursor: pointer;
     z-index: 0;
+  	background: transparent !important;
+	color: white !important;
 }
 
 .AndroidTV_widget .reboot {
     position: absolute;
-    top: 2px;
+    top: 7px;
     left: 5px;
     cursor: pointer;
     z-index: 0;
+  	background: transparent !important;
+	color: white !important;
 }
 
 .AndroidTV_widget .title {
@@ -61,10 +65,10 @@
 }
 
 .AndroidTV_widget .icons img{
-  	margin-top: 2px;
+    margin-top: -8px;
     border-radius: 10%;
-   	width: 35px;
-	height: auto;
+    width: 40px;
+    height: auto;
     z-index: 7;
 }
 
@@ -75,24 +79,36 @@
 .AndroidTV_widget .leftpanel {
     text-align: left;
     width: 250px;
-    height: 327px;
+    height: 316px;
     float: left;
     position: absolute;
     z-index: 10;
     left: -250px;
 	background: rgba(0, 0, 0, 0.7);
+  	top: 24px;
 }
 
 .AndroidTV_widget .rightpanel {
-  padding-left: 20px;
-    width: 250px;
-    height: 327px;
-    float: left;
-    position: absolute;
-    z-index: 10;
-    right: -250px;
-    background: rgba(0, 0, 0, 0.9);
-}
+    padding-left: 20px;
+      width: 250px;
+      height: 316px;
+      float: left;
+      position: absolute;
+      z-index: 10;
+      right: -250px;
+      background: rgba(0, 0, 0, 0.9);
+        top: 24px;
+  }
+  
+  .AndroidTV_widget .downpanel {
+      width: 250px;
+      height: 316px;
+      float: left;
+      position: absolute;
+      z-index: 10;
+      background: rgba(0, 0, 0, 0.9);
+        top: 340px;
+  }
 
 .AndroidTV_widget .leftRafter {
     width: 15px;
@@ -112,7 +128,7 @@
     width: 15px;
     height: 40px;
     position: absolute;
-    top: 143.5px;
+    top: 119.5px;
     right: 5px;
     cursor: pointer;
     -ms-transform: rotate(180deg);
@@ -149,7 +165,7 @@
     width: 15px;
     height: 40px;
     position: absolute;
-    top: 143.5px;
+    top: 119.5px;
     left: 5px;
     cursor: pointer;
     z-index: 4;
@@ -175,23 +191,77 @@
     transform: rotate(180deg);
 }
 
-.AndroidTV_widget .info_data{
+.AndroidTV_widget .downRafter {
+    width: 15px;
+    height: 40px;
+    position: absolute;
+    top: 309.5px;
+    right: 118px;
+    cursor: pointer;
+  	-ms-transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
+    transform: rotate(90deg);
+    z-index: 4;
+    opacity: 0.3;
+}
+
+.AndroidTV_widget .downRafter2 {
+    width: 15px;
+    height: 40px;
+    position: absolute;
+    top: -12.5px;
+    left: 118px;
+    cursor: pointer; 
+  	-ms-transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
+    transform: rotate(90deg);
+    z-index: 4;
+    opacity: 0.6;
+}
+
+.AndroidTV_widget .downRafter:hover {
+    opacity: 1;
+}
+.AndroidTV_widget .downRafter2:hover {
+    opacity: 1;
+}
+
+.AndroidTV_widget .downpanel .downRafter {
+    -ms-transform: rotate(270deg);
+    -webkit-transform: rotate(270deg);
+    transform: rotate(270deg);
+}
+
+.AndroidTV_widget .downpanel .downRafter2 {
+    -ms-transform: rotate(270deg);
+    -webkit-transform: rotate(270deg);
+    transform: rotate(270deg);
+}
+
+.AndroidTV_widget .info_data {
     font-size: 1em;
+  	color: white !important;
+}
+
+.AndroidTV_widget .play_state {
+    font-size: 1em;
+  	color: white !important;
 }
 
 .AndroidTV_widget .downpart {
-    height: 40px;
-    width: 272px;
+    height: 51px;
+    width: 250px;
 }
 
 .AndroidTV_widget .AndroidrcContent {
 	display: block;
-	margin-left: 30px;
+	margin-left: 24px;
 	overflow: hidden;
 	position: relative;
 	table-layout: fixed;
 	width: 200px;
 	height: 20px;
+  	color: white;
 }
 .AndroidTV_widget .message {
 	display: block;
@@ -208,10 +278,10 @@
 }
  @keyframes defilement {
  0%, 100% {
-margin-left:0;
+margin-left:250px;
 }
  99.99% {
-margin-left:-100%;
+ margin-left:-100%;
 }
 }
 
@@ -230,11 +300,30 @@ margin-left:-100%;
 }
 
 .AndroidTV_widget .volumeDownpart {
-    height: 40px;
+    height: 51px;
     width: 250px;
     z-index: 7;
 }
 
 .AndroidTV_widget .slider.slider-horizontal{
   margin-top: 10px;
+}
+
+.AndroidTV_widget .powerDevice{
+    position : absolute;
+    font-size : 1em; 
+    z-index:4;
+    opacity:1;
+  cursor: pointer;
+  top: 2px;
+  right: 0px;
+    background: transparent !important;
+  color: white !important;
+}
+.AndroidTV_widget .powerDevice:hover{
+  opacity:0.7;
+}
+
+#power{
+  width : 60px;
 }
