@@ -65,7 +65,7 @@
 			</li>
 			<li role="presentation" class="active">
 				<a href="#eqlogictab" aria-controls="home" role="tab" data-toggle="tab">
-					<i class="fas fa-tachometer"></i> 
+					<i class="fas fa-tachometer-alt"></i> 
 					{{Equipement}}
 				</a>
 			</li>
@@ -75,10 +75,22 @@
 					{{Commandes}}
 				</a>
 			</li>
+            <li role="presentation">
+				<a href="#infotab" aria-controls="profile" role="tab" data-toggle="tab">
+					<i class="fas fa-list-alt"></i> 
+					{{Infos}}
+				</a>
+			</li>
 			<li role="presentation">
 				<a href="#apptab" aria-controls="profile" role="tab" data-toggle="tab">
 					<i class="fas fa-list-alt"></i> 
 					{{Liste des applications}}
+				</a>
+			</li>
+            <li role="presentation">
+				<a href="#hdmitab" aria-controls="profile" role="tab" data-toggle="tab">
+					<i class="fas fa-list-alt"></i> 
+					{{HDMI}}
 				</a>
 			</li>
 		</ul>
@@ -155,7 +167,7 @@
 									<div class="form-group col-sm-12">
 										<label class="col-sm-3 control-label">{{Assistant}}</label>
 										<div class="col-sm-3">
-											<a class="btn btn-infos" id="bt_configureAdb"><i class="fa fa-android"></i> {{Connecter un appareil Android}}</a>
+											<a class="btn btn-infos" id="bt_configureAdb"><i class="fab fa-android"></i> {{Connecter un appareil Android}}</a>
 										</div>
 									</div>
 									<div class="form-group col-sm-12">
@@ -173,6 +185,12 @@
 											<input id="ip_address" data-inputmask="'alias': 'ip'" data-mask="" type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="ip_address"/>
 										</div>
 									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label">{{Adresse MAC}}</label>
+										<div class="col-sm-3">
+											<input id="mac_address" data-inputmask="'alias': 'mac'" data-mask="" type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="mac_address"/>
+										</div>
+									</div>								
 								</fieldset>
 								</br>
 								<fieldset>
@@ -203,12 +221,31 @@
 					<tbody></tbody>
 				</table>
 			</div>
-			<div role="tabpanel" class="tab-pane" id="apptab">
-				<a class="btn btn-success btn-sm cmdAction pull-right" data-action="add" style="margin-top:5px;"><i class="fas fa-plus-circle"></i> {{Commandes}}</a>
-				<table id="table_appli" class="table table-bordered table-condensed">
+            <div role="tabpanel" class="tab-pane" id="infotab">
+				<table id="table_info" class="table table-bordered table-condensed">
 					<thead>
 						<tr>
 							<th>{{Nom}}</th><th>{{Type}}</th><th>{{Afficher}}</th><th>{{Action}}</th>
+						</tr>
+					</thead>
+					<tbody></tbody>
+				</table>
+			</div>
+            <div role="tabpanel" class="tab-pane" id="apptab">
+				<table id="table_appli" class="table table-bordered table-condensed">
+					<thead>
+						<tr>
+							<th style="vertical-align: middle;">{{Nom}}</th><th>{{Icone}}    <a class="btn btn-default btn-sm" id="bt_chooseIcone"><i class="fas fa-flag"></i> Choisir</a></th><th style="vertical-align: middle;">{{Type}}</th><th style="vertical-align: middle;">{{Afficher}}</th><th style="vertical-align: middle;">{{Action}}</th><th><a class="btn btn-success btn-sm cmdAction pull-right" data-action="add" style="margin-top:5px;"><i class="fas fa-plus-circle"></i> {{Commandes}}</a></th>
+						</tr>
+					</thead>
+					<tbody></tbody>
+				</table>
+			</div>
+			<div role="tabpanel" class="tab-pane" id="hdmitab">
+				<table id="table_hdmi" class="table table-bordered table-condensed">
+					<thead>
+						<tr>
+							<th style="vertical-align: middle;">{{Nom}}</th><th>{{Icone}}    <a class="btn btn-default btn-sm" id="bt_chooseIcone2"><i class="fas fa-flag"></i> Choisir</a></th><th style="vertical-align: middle;">{{Type}}</th><th style="vertical-align: middle;">{{Afficher}}</th><th style="vertical-align: middle;">{{Action}}</th>
 						</tr>
 					</thead>
 					<tbody></tbody>
