@@ -455,9 +455,9 @@ class AndroidTVCmd extends cmd{
 
 		$sudo = exec("\$EUID");
 		if ($sudo != "0")
-		$sudo_prefix = "sudo ";
+			$sudo_prefix = "sudo ";
 		$ip_address = $ARC->getConfiguration('ip_address');
-    	$mac_address = $ARC->getConfiguration('mac_address');
+		$mac_address = $ARC->getConfiguration('mac_address');
 		$commande = $this->getConfiguration('commande');
 		switch ($this->getLogicalId()){
 			case 'setVolume':
@@ -465,7 +465,7 @@ class AndroidTVCmd extends cmd{
 			break;
 			case 'chaine':
 				$keyevent = '';
-				foreach(str_split($_options['slider']) as $touche){
+				foreach(str_split(jeedom::evaluateExpression($_options['slider'])) as $touche){
 					$keyevent .= 'keyevent ';
 					$keyevent .= $touche + 7;
 					$keyevent .=  ' ';
@@ -474,16 +474,13 @@ class AndroidTVCmd extends cmd{
 			break;
 
 		}
-		
-      
-        if ($commande == "on"){
-      		$action= shell_exec($sudo_prefix . " wakeonlan " . $mac_address. " -i " . $ip_address . " && sleep 20 && " . $sudo_prefix . "adb -s ".$ip_address.":5555 shell input keyevent 3");
-      		log::add('AndroidTV', 'info',$this->getHumanName() . ' Command ' . $action );
-
-    	}else{
-      		log::add('AndroidTV', 'info',$this->getHumanName() . ' Command "' . $commande . '" sent to android device at ip address : ' . $ip_address);
+		if ($commande == "on"){
+			$action= shell_exec($sudo_prefix . " wakeonlan " . $mac_address. " -i " . $ip_address . " && sleep 20 && " . $sudo_prefix . "adb -s ".$ip_address.":5555 shell input keyevent 3");
+			log::add('AndroidTV', 'info',$this->getHumanName() . ' Command ' . $action );
+		}else{
+			log::add('AndroidTV', 'info',$this->getHumanName() . ' Command "' . $commande . '" sent to android device at ip address : ' . $ip_address);
 			shell_exec($sudo_prefix . "adb -s ".$ip_address.":5555 " . $commande);
 			$ARC->updateInfo();
-        }
+		}
 	}
 }
