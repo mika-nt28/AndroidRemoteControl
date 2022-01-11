@@ -198,16 +198,15 @@ class AndroidTV extends eqLogic{
 		$this->addCmd("netflix","action","other",array('categorie'=> "appli",'icon'=>"netflix.png",'commande'=>"shell am start com.netflix.ninja/.MainActivity"));
 		$this->addCmd("youtube","action","other",array('categorie'=> "appli",'icon'=>"youtube.png",'commande'=>"shell monkey -p com.google.android.youtube.tv -c android.intent.category.LAUNCHER 1"));
 		$this->addCmd("plex","action","other",array('categorie'=> "appli",'icon'=>"plex.png",'commande'=>"shell monkey -p com.plexapp.android -c android.intent.category.LAUNCHER 1"));
-		//$this->addCmd("plex","action","other",array('categorie'=> "appli",'icon'=>"plex.png",'commande'=>"shell am start -a android.intent.action.VIEW -n com.plexapp.android/com.plexapp.plex.activities.SplashActivity"));
 		$this->addCmd("kodi","action","other",array('categorie'=> "appli",'icon'=>"kodi.png",'commande'=>"shell monkey -p org.xbmc.kodi -c android.intent.category.LAUNCHER 1"));
 		$this->addCmd("disney","action","other",array('categorie'=> "appli",'icon'=>"disney.png",'commande'=>"shell monkey -p com.disney.disneyplus -c android.intent.category.LAUNCHER 1"));
 		$this->addCmd("rakutentv","action","other",array('categorie'=> "appli",'icon'=>"rakutentv.png",'commande'=>"shell monkey -p tv.wuaki.apptv -c android.intent.category.LAUNCHER 1"));
 		$this->addCmd("molotov","action","other",array('categorie'=> "appli",'icon'=>"molotov.png",'commande'=>"shell monkey -p tv.molotov.app -c android.intent.category.LAUNCHER 1"));
 		$this->addCmd("spotify","action","other",array('categorie'=> "appli",'icon'=>"spotify.png",'commande'=>"shell monkey -p com.spotify.tv.android -c android.intent.category.LAUNCHER 1"));
-		//$this->addCmd("amazonvideo","action","other",array('categorie'=> "appli",'icon'=>"amazonvideo.png",'commande'=>"shell monkey -p com.amazon.amazonvideo.livingroom.nvidia -c android.intent.category.LAUNCHER 1"));
-      	$this->addCmd("amazonvideo","action","other",array('categorie'=> "appli",'icon'=>"amazonvideo.png",'commande'=>"shell am start -a android.intent.action.VIEW -n com.amazon.amazonvideo.livingroom/com.amazon.ignition.IgnitionActivity"));
+		$this->addCmd("amazonvideo","action","other",array('categorie'=> "appli",'icon'=>"amazonvideo.png",'commande'=>"shell am start -a android.intent.action.VIEW -n com.amazon.amazonvideo.livingroom/com.amazon.ignition.IgnitionActivity"));
 		$this->addCmd("vevo","action","other",array('categorie'=> "appli",'icon'=>"vevo.jpg",'commande'=>"shell monkey -p com.vevo -c android.intent.category.LAUNCHER 1"));
 		$this->addCmd("mytf1","action","other",array('categorie'=> "appli",'icon'=>"mytf1.png",'commande'=>"shell monkey -p fr.tf1.mytf1 -c android.intent.category.LAUNCHER 1"));
+		$this->addCmd("FranceTV","action","other",array('categorie'=> "appli",'icon'=>"francetv.jpg",'commande'=>"shell am start fr.francetv.pluzz/fr.francetv.androidtv.main.MainActivity"));
 		$this->addCmd("m6replay","action","other",array('categorie'=> "appli",'icon'=>"m6replay.png",'commande'=>"shell monkey -p fr.m6.m6replay.by -c android.intent.category.LAUNCHER 1"));
 		$this->addCmd("dsvideo","action","other",array('categorie'=> "appli",'icon'=>"dsvideo.png",'commande'=>"shell monkey -p com.synology.dsvideo -c android.intent.category.LAUNCHER 1"));
 		$this->addCmd("ted","action","other",array('categorie'=> "appli",'icon'=>"ted.png",'commande'=>"shell monkey -p com.ted.android.tv -c android.intent.category.LAUNCHER 1"));
@@ -222,8 +221,6 @@ class AndroidTV extends eqLogic{
 		$this->addCmd("tinycam pro","action","other",array('categorie'=> "appli",'icon'=>"tinycampro.png",'commande'=>"shell monkey -p com.alexvas.dvr.pro -c android.intent.category.LAUNCHER 1"));
 		$this->addCmd("mediashell","action","other",array('categorie'=> "appli",'icon'=>"home1.png",'commande'=>""));
 		$this->addCmd("Freebox by Oqee","action","other",array('categorie'=> "appli",'icon'=>"freeboxtv.jpg",'commande'=>"am start -n net.oqee.androidtv/.ui.main.MainActivity"));
-
-
 		
 		$sudo = exec("\$EUID");
 		if ($sudo != "0")
@@ -458,9 +455,9 @@ class AndroidTVCmd extends cmd{
 
 		$sudo = exec("\$EUID");
 		if ($sudo != "0")
-		$sudo_prefix = "sudo ";
+			$sudo_prefix = "sudo ";
 		$ip_address = $ARC->getConfiguration('ip_address');
-    	$mac_address = $ARC->getConfiguration('mac_address');
+		$mac_address = $ARC->getConfiguration('mac_address');
 		$commande = $this->getConfiguration('commande');
 		switch ($this->getLogicalId()){
 			case 'setVolume':
@@ -468,7 +465,7 @@ class AndroidTVCmd extends cmd{
 			break;
 			case 'chaine':
 				$keyevent = '';
-				foreach(str_split($_options['slider']) as $touche){
+				foreach(str_split(jeedom::evaluateExpression($_options['slider'])) as $touche){
 					$keyevent .= 'keyevent ';
 					$keyevent .= $touche + 7;
 					$keyevent .=  ' ';
@@ -477,16 +474,13 @@ class AndroidTVCmd extends cmd{
 			break;
 
 		}
-		
-      
-        if ($commande == "on"){
-      		$action= shell_exec($sudo_prefix . " wakeonlan " . $mac_address. " -i " . $ip_address . " && sleep 20 && " . $sudo_prefix . "adb -s ".$ip_address.":5555 shell input keyevent 3");
-      		log::add('AndroidTV', 'info',$this->getHumanName() . ' Command ' . $action );
-
-    	}else{
-      		log::add('AndroidTV', 'info',$this->getHumanName() . ' Command "' . $commande . '" sent to android device at ip address : ' . $ip_address);
+		if ($commande == "on"){
+			$action= shell_exec($sudo_prefix . " wakeonlan " . $mac_address. " -i " . $ip_address . " && sleep 20 && " . $sudo_prefix . "adb -s ".$ip_address.":5555 shell input keyevent 3");
+			log::add('AndroidTV', 'info',$this->getHumanName() . ' Command ' . $action );
+		}else{
+			log::add('AndroidTV', 'info',$this->getHumanName() . ' Command "' . $commande . '" sent to android device at ip address : ' . $ip_address);
 			shell_exec($sudo_prefix . "adb -s ".$ip_address.":5555 " . $commande);
 			$ARC->updateInfo();
-        }
+		}
 	}
 }
