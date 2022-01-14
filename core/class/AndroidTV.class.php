@@ -122,9 +122,9 @@ class AndroidTV extends eqLogic{
 		else
 			$ip_address = $this->getConfiguration('ip_address');
 		log::add('AndroidTV', 'debug', $this->getHumanName(). ' Déconnection préventive du périphérique '.$ip_address.' encours');
-		shell_exec($sudo_prefix . "adb connect ".$ip_address);
+		shell_exec($sudo_prefix . "adb connect ".$ip_address.":5555");
 		log::add('AndroidTV', 'debug', $this->getHumanName(). ' Connection au périphérique '.$ip_address.' encours');
-		shell_exec($sudo_prefix . "adb connect ".$ip_address);
+		shell_exec($sudo_prefix . "adb connect ".$ip_address.":5555");
 	}
 	public function addCmd($name,$type='action',$subtype='other',$configuration='',$unite='',$value=''){
 		$cmd = $this->getCmd(null, $name);
