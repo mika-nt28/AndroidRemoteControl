@@ -250,6 +250,7 @@ class AndroidTV extends eqLogic{
 	
 		$infos['power_state'] = substr($this->runcmd("shell dumpsys power -h | grep \"Display Power\" | cut -c22-"), 0, -1);
 		log::add('AndroidTV', 'debug', $this->getHumanName() . " power_state: " . $infos['power_state']);
+		//$infos['encours']     = substr($this->runcmd("shell dumpsys activity activities | grep mResumedActivity | cut -d '/' -f1 | cut -d ' ' -f8"), 0, -1);   
 		$infos['encours']     = substr($this->runcmd("shell dumpsys window windows | grep -E 'mFocusedApp'| cut -d / -f 1 | cut -d ' ' -f 7"), 0, -1);
 		log::add('AndroidTV', 'debug', $this->getHumanName() . " encours: " .$infos['encours'] );
       	$infos['App encours']     = substr($this->runcmd("shell dumpsys window windows | grep -E 'mFocusedApp'| cut -d / -f 1 | cut -d ' ' -f 7 | cut -d '.' -f2"), 0, -1);
