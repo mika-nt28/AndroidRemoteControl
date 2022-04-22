@@ -220,7 +220,7 @@ class AndroidTV extends eqLogic{
 		$this->addCmd("tinycam free","action","other",array('categorie'=> "appli",'icon'=>"tinycamfree.png",'commande'=>"shell monkey -p com.alexvas.dvr -c android.intent.category.LAUNCHER 1"));
 		$this->addCmd("tinycam pro","action","other",array('categorie'=> "appli",'icon'=>"tinycampro.png",'commande'=>"shell monkey -p com.alexvas.dvr.pro -c android.intent.category.LAUNCHER 1"));
 		$this->addCmd("mediashell","action","other",array('categorie'=> "appli",'icon'=>"home1.png",'commande'=>""));
-		$this->addCmd("Freebox by Oqee","action","other",array('categorie'=> "appli",'icon'=>"freeboxtv.jpg",'commande'=>"am start -n net.oqee.androidtv/.ui.main.MainActivity"));
+		$this->addCmd("Freebox by Oqee","action","other",array('categorie'=> "appli",'icon'=>"freeboxtv.jpg",'commande'=>"shell am start net.oqee.androidtv.store/net.oqee.androidtv.ui.main.MainActivity"));
 		
 		$sudo = exec("\$EUID");
 		if ($sudo != "0")
@@ -269,8 +269,7 @@ class AndroidTV extends eqLogic{
 		$infos['title'] = substr($this->runcmd("shell dumpsys media_session | grep -A 11 '".$infos['encours']."' | grep 'metadata' | cut -d '=' -f3 | cut -d ',' -f1 | grep -Ev '^null$'"), 0);
 		log::add('AndroidTV', 'debug', $this->getHumanName() . " title: " .$infos['title']);
 		$infos['volume_status'] = substr($this->runcmd("shell media volume --stream 3 --get | grep volume |grep is | cut -d' ' -f4"), 0, -1);
-		log::add('AndroidTV', 'debug',$this->getHumanName() . " volume: " .$infos['volume_status']);
-		$infos['play_state']  = substr($this->runcmd("shell dumpsys bluetooth_manager | grep mCurrentPlayState | cut -d,  -f1 | cut -c43-"), 0, -1);
+		log::add('AndroidTV', 'debug',$this->getHumanName() . " volume: " .$infos['volume_status']);	$infos['play_state'] = substr($this->runcmd(« shell dumpsys media_session | grep -m 1 ‹ state=PlaybackState {state= › | cut -d, -f1 | cut -c34- »), 0,-1);
 		log::add('AndroidTV', 'debug',  $this->getHumanName() . " play_state: " .$infos['play_state'] );
 		$infos['battery_level']  = substr($this->runcmd("shell dumpsys battery | grep level | cut -d: -f2"), 0, -1);
 		log::add('AndroidTV', 'debug', $this->getHumanName() . " battery_level: " .$infos['battery_level']);
