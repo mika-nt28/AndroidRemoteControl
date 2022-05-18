@@ -210,8 +210,8 @@ class AndroidTV extends eqLogic{
 		$this->addCmd("m6replay","action","other",array('categorie'=> "appli",'icon'=>"m6replay.png",'commande'=>"shell monkey -p fr.m6.m6replay.by -c android.intent.category.LAUNCHER 1"));
 		$this->addCmd("dsvideo","action","other",array('categorie'=> "appli",'icon'=>"dsvideo.png",'commande'=>"shell monkey -p com.synology.dsvideo -c android.intent.category.LAUNCHER 1"));
 		$this->addCmd("ted","action","other",array('categorie'=> "appli",'icon'=>"ted.png",'commande'=>"shell monkey -p com.ted.android.tv -c android.intent.category.LAUNCHER 1"));
-		$this->addCmd("leanback","action","other",array('categorie'=> "appli",'icon'=>"home1.png",'commande'=>"shell input keyevent 3"));
-		$this->addCmd("tvlauncher","action","other",array('categorie'=> "appli",'icon'=>"home1.png",'commande'=>"shell input keyevent 3"));
+		$this->addCmd("leanback","action","other",array('categorie'=> "appli",'icon'=>"home.png",'commande'=>"shell input keyevent 3"));
+		$this->addCmd("tvlauncher","action","other",array('categorie'=> "appli",'icon'=>"home.png",'commande'=>"shell input keyevent 3"));
 		$this->addCmd("zapster","action","other",array('categorie'=> "appli",'icon'=>"freeboxtv.jpg",'commande'=>"shell am start org.droidtv.zapster/.playtv.activity.PlayTvActivity"));
 		$this->addCmd("freebox","action","other",array('categorie'=> "appli",'icon'=>"freeboxtv.jpg",'commande'=>"shell monkey -p fr.freebox.tv -c android.intent.category.LAUNCHER 1"));
 		$this->addCmd("mycanal","action","other",array('categorie'=> "appli",'icon'=>"mycanal.png",'commande'=>"shell monkey -p com.canal.android.canal -c android.intent.category.LAUNCHER 1"));
@@ -219,7 +219,7 @@ class AndroidTV extends eqLogic{
 		$this->addCmd("deezer","action","other",array('categorie'=> "appli",'icon'=>"deezer.png",'commande'=>"shell monkey -p  deezer.android.tv -c android.intent.category.LAUNCHER 1"));
 		$this->addCmd("tinycam free","action","other",array('categorie'=> "appli",'icon'=>"tinycamfree.png",'commande'=>"shell monkey -p com.alexvas.dvr -c android.intent.category.LAUNCHER 1"));
 		$this->addCmd("tinycam pro","action","other",array('categorie'=> "appli",'icon'=>"tinycampro.png",'commande'=>"shell monkey -p com.alexvas.dvr.pro -c android.intent.category.LAUNCHER 1"));
-		$this->addCmd("mediashell","action","other",array('categorie'=> "appli",'icon'=>"home1.png",'commande'=>""));
+		$this->addCmd("mediashell","action","other",array('categorie'=> "appli",'icon'=>"home.png",'commande'=>""));
 		$this->addCmd("OQEE","action","other",array('categorie'=> "appli",'icon'=>"freeboxtv.jpg",'commande'=>"shell am start net.oqee.androidtv.store/net.oqee.androidtv.ui.main.MainActivity"));
 		
 		$sudo = exec("\$EUID");
