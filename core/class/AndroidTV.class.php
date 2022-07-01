@@ -337,28 +337,41 @@ class AndroidTV extends eqLogic{
 		if (isset($infos['volume_status']))
 			$this->checkAndUpdateCmd('volume_status', $infos['volume_status']);
 		if (isset($infos['play_state'])) {
-			if ($infos['play_state'] == 2) 
-				$this->checkAndUpdateCmd('play_state', "pause");
-			elseif ($infos['play_state'] == 3)
-				$this->checkAndUpdateCmd('play_state', "lecture");
-			elseif ($infos['play_state'] == 0)
-				$this->checkAndUpdateCmd('play_state', "arret");
-			else
-				$this->checkAndUpdateCmd('play_state',"inconnue");
+			switch($infos['play_state'] ){
+				case 2:
+					$this->checkAndUpdateCmd('play_state', "pause");
+				break;
+				case 3:
+					$this->checkAndUpdateCmd('play_state', "lecture");
+				break;
+				case 0:
+					$this->checkAndUpdateCmd('play_state', "arret");
+				break;
+				default:
+					$this->checkAndUpdateCmd('play_state',"inconnue");
+				break;
+			}
 		}
 		if (isset($infos['battery_level'])) 
 			$this->checkAndUpdateCmd('battery_level', $infos['battery_level']);
 		if (isset($infos['battery_status'])) {
-			if ($infos['battery_status'] == 2)
-				$this->checkAndUpdateCmd('battery_status',"en charge");
-			elseif ($infos['battery_status'] == 3)
-				$this->checkAndUpdateCmd('battery_status',"en décharge");
-			elseif ($infos['battery_status'] == 4)
-				$this->checkAndUpdateCmd('battery_status',"pas de charge");
-			elseif ($infos['battery_status'] == 5 )
-				$this->checkAndUpdateCmd('battery_status',"pleine");
-			else
-				$this->checkAndUpdateCmd('battery_status',"inconnue");
+			switch($infos['battery_status']){
+				case 2:
+					$this->checkAndUpdateCmd('battery_status',"en charge");
+				break;
+				case 3:
+					$this->checkAndUpdateCmd('battery_status',"en décharge");
+				break;
+				case 4:
+					$this->checkAndUpdateCmd('battery_status',"pas de charge");
+				break;
+				case 5:
+					$this->checkAndUpdateCmd('battery_status',"pleine");
+				break;
+				default:
+					$this->checkAndUpdateCmd('battery_status',"inconnue");
+				break;
+			}
 		}
 	}
 	public function checkAndroidTVStatus(){
@@ -473,7 +486,6 @@ class AndroidTVCmd extends cmd{
 				}
 				$commande = str_replace('#Chaine#',trim($keyevent),$commande);
 			break;
-
 		}
 		if ($commande == "on"){
 			$action= shell_exec($sudo_prefix . " wakeonlan " . $mac_address. " -i " . $ip_address . " && sleep 20 && " . $sudo_prefix . "adb -s ".$ip_address.":5555 shell input keyevent 3");
