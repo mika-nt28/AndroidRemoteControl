@@ -269,13 +269,9 @@ class AndroidTV extends eqLogic{
 		$infos['title'] = substr($this->runcmd("shell dumpsys media_session | grep -A 11 '".$infos['encours']."' | grep 'metadata' | cut -d '=' -f3 | cut -d ',' -f1 | grep -Ev '^null$'"), 0);
 		log::add('AndroidTV', 'debug', $this->getHumanName() . " title: " .$infos['title']);
 		$infos['volume_status'] = substr($this->runcmd("shell media volume --stream 3 --get | grep volume |grep is | cut -d' ' -f4"), 0, -1);
-log::add('AndroidTV', 'debug',$this->getHumanName() . " volume: " .$infos['volume_status']);	
-		$infos['play_state'] = substr($this->runcmd(" shell dumpsys media_session | grep -m 1 ‹ state=PlaybackState {state= › | cut -d, -f1 | cut -c34- "), 0,-1);		
-
-
-
-
-
+		log::add('AndroidTV', 'debug',$this->getHumanName() . " volume: " .$infos['volume_status']);	
+		//$infos['play_state'] = substr($this->runcmd(" shell dumpsys media_session | grep -m 1 ‹ state=PlaybackState {state= › | cut -d, -f1 | cut -c34- "), 0,-1);
+		$infos['play_state'] = trim($this->runcmd(" shell dumpsys media_session | grep state=PlaybackState | cut -d'{' -f2| grep state | cut -d'=' -f2 | cut -d',' -f1"));
 		log::add('AndroidTV', 'debug',  $this->getHumanName() . " play_state: " .$infos['play_state'] );
 		$infos['battery_level']  = substr($this->runcmd("shell dumpsys battery | grep level | cut -d: -f2"), 0, -1);
 		log::add('AndroidTV', 'debug', $this->getHumanName() . " battery_level: " .$infos['battery_level']);
