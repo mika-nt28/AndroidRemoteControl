@@ -221,7 +221,8 @@ class AndroidTV extends eqLogic{
 		$this->addCmd("tinycam pro","action","other",array('categorie'=> "appli",'icon'=>"tinycampro.png",'commande'=>"shell monkey -p com.alexvas.dvr.pro -c android.intent.category.LAUNCHER 1"));
 		$this->addCmd("mediashell","action","other",array('categorie'=> "appli",'icon'=>"home.png",'commande'=>""));
 		$this->addCmd("OQEE","action","other",array('categorie'=> "appli",'icon'=>"freeboxtv.jpg",'commande'=>"shell am start net.oqee.androidtv.store/net.oqee.androidtv.ui.main.MainActivity"));
-		
+		$this->addCmd("salto","action","other",array('categorie'=> "appli",'icon'=>"salto.png",'commande'=>"shell monkey -p fr.salto.app -c android.intent.category.LAUNCHER 1"));
+
 		$sudo = exec("\$EUID");
 		if ($sudo != "0")
 		$sudo_prefix = "sudo ";
