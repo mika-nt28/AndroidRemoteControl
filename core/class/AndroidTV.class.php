@@ -221,7 +221,8 @@ class AndroidTV extends eqLogic{
 		$this->addCmd("tinycam pro","action","other",array('categorie'=> "appli",'icon'=>"tinycampro.png",'commande'=>"shell monkey -p com.alexvas.dvr.pro -c android.intent.category.LAUNCHER 1"));
 		$this->addCmd("mediashell","action","other",array('categorie'=> "appli",'icon'=>"home.png",'commande'=>""));
 		$this->addCmd("OQEE","action","other",array('categorie'=> "appli",'icon'=>"freeboxtv.jpg",'commande'=>"shell am start net.oqee.androidtv.store/net.oqee.androidtv.ui.main.MainActivity"));
-		
+		$this->addCmd("salto","action","other",array('categorie'=> "appli",'icon'=>"salto.png",'commande'=>"shell monkey -p fr.salto.app -c android.intent.category.LAUNCHER 1"));
+
 		$sudo = exec("\$EUID");
 		if ($sudo != "0")
 		$sudo_prefix = "sudo ";
@@ -269,13 +270,9 @@ class AndroidTV extends eqLogic{
 		$infos['title'] = substr($this->runcmd("shell dumpsys media_session | grep -A 11 '".$infos['encours']."' | grep 'metadata' | cut -d '=' -f3 | cut -d ',' -f1 | grep -Ev '^null$'"), 0);
 		log::add('AndroidTV', 'debug', $this->getHumanName() . " title: " .$infos['title']);
 		$infos['volume_status'] = substr($this->runcmd("shell media volume --stream 3 --get | grep volume |grep is | cut -d' ' -f4"), 0, -1);
-log::add('AndroidTV', 'debug',$this->getHumanName() . " volume: " .$infos['volume_status']);	
-		$infos['play_state'] = substr($this->runcmd(" shell dumpsys media_session | grep -m 1 ‹ state=PlaybackState {state= › | cut -d, -f1 | cut -c34- "), 0,-1);		
-
-
-
-
-
+		log::add('AndroidTV', 'debug',$this->getHumanName() . " volume: " .$infos['volume_status']);	
+		//$infos['play_state'] = substr($this->runcmd(" shell dumpsys media_session | grep -m 1 ‹ state=PlaybackState {state= › | cut -d, -f1 | cut -c34- "), 0,-1);
+		$infos['play_state'] = trim($this->runcmd(" shell dumpsys media_session | grep state=PlaybackState | cut -d'{' -f2| grep state | cut -d'=' -f2 | cut -d',' -f1"));
 		log::add('AndroidTV', 'debug',  $this->getHumanName() . " play_state: " .$infos['play_state'] );
 		$infos['battery_level']  = substr($this->runcmd("shell dumpsys battery | grep level | cut -d: -f2"), 0, -1);
 		log::add('AndroidTV', 'debug', $this->getHumanName() . " battery_level: " .$infos['battery_level']);
@@ -341,28 +338,41 @@ log::add('AndroidTV', 'debug',$this->getHumanName() . " volume: " .$infos['volum
 		if (isset($infos['volume_status']))
 			$this->checkAndUpdateCmd('volume_status', $infos['volume_status']);
 		if (isset($infos['play_state'])) {
-			if ($infos['play_state'] == 2) 
-				$this->checkAndUpdateCmd('play_state', "pause");
-			elseif ($infos['play_state'] == 3)
-				$this->checkAndUpdateCmd('play_state', "lecture");
-			elseif ($infos['play_state'] == 0)
-				$this->checkAndUpdateCmd('play_state', "arret");
-			else
-				$this->checkAndUpdateCmd('play_state',"inconnue");
+			switch($infos['play_state'] ){
+				case 2:
+					$this->checkAndUpdateCmd('play_state', "pause");
+				break;
+				case 3:
+					$this->checkAndUpdateCmd('play_state', "lecture");
+				break;
+				case 0:
+					$this->checkAndUpdateCmd('play_state', "arret");
+				break;
+				default:
+					$this->checkAndUpdateCmd('play_state',"inconnue");
+				break;
+			}
 		}
 		if (isset($infos['battery_level'])) 
 			$this->checkAndUpdateCmd('battery_level', $infos['battery_level']);
 		if (isset($infos['battery_status'])) {
-			if ($infos['battery_status'] == 2)
-				$this->checkAndUpdateCmd('battery_status',"en charge");
-			elseif ($infos['battery_status'] == 3)
-				$this->checkAndUpdateCmd('battery_status',"en décharge");
-			elseif ($infos['battery_status'] == 4)
-				$this->checkAndUpdateCmd('battery_status',"pas de charge");
-			elseif ($infos['battery_status'] == 5 )
-				$this->checkAndUpdateCmd('battery_status',"pleine");
-			else
-				$this->checkAndUpdateCmd('battery_status',"inconnue");
+			switch($infos['battery_status']){
+				case 2:
+					$this->checkAndUpdateCmd('battery_status',"en charge");
+				break;
+				case 3:
+					$this->checkAndUpdateCmd('battery_status',"en décharge");
+				break;
+				case 4:
+					$this->checkAndUpdateCmd('battery_status',"pas de charge");
+				break;
+				case 5:
+					$this->checkAndUpdateCmd('battery_status',"pleine");
+				break;
+				default:
+					$this->checkAndUpdateCmd('battery_status',"inconnue");
+				break;
+			}
 		}
 	}
 	public function checkAndroidTVStatus(){
@@ -477,7 +487,6 @@ class AndroidTVCmd extends cmd{
 				}
 				$commande = str_replace('#Chaine#',trim($keyevent),$commande);
 			break;
-
 		}
 		if ($commande == "on"){
 			$action= shell_exec($sudo_prefix . " wakeonlan " . $mac_address. " -i " . $ip_address . " && sleep 20 && " . $sudo_prefix . "adb -s ".$ip_address.":5555 shell input keyevent 3");
