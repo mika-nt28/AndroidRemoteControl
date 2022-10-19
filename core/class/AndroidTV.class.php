@@ -222,6 +222,9 @@ class AndroidTV extends eqLogic{
 		$this->addCmd("mediashell","action","other",array('categorie'=> "appli",'icon'=>"home.png",'commande'=>""));
 		$this->addCmd("OQEE","action","other",array('categorie'=> "appli",'icon'=>"freeboxtv.jpg",'commande'=>"shell am start net.oqee.androidtv.store/net.oqee.androidtv.ui.main.MainActivity"));
 		$this->addCmd("salto","action","other",array('categorie'=> "appli",'icon'=>"salto.png",'commande'=>"shell monkey -p fr.salto.app -c android.intent.category.LAUNCHER 1"));
+		$this->addCmd("HboMax","action","other",array('categorie'=> "appli",'icon'=>"HboMax.png",'commande'=>"shell am start com.hbo.hbonow/com.hbo.max.HboMaxActivity"));
+		$this->addCmd("tvplayer","action","other",array('categorie'=> "appli",'icon'=>"tvplayer.png",'commande'=>"shell monkey -p ar.tvplayer.tv -c android.intent.category.LAUNCHER 1"));
+		$this->addCmd("YoutubeKids","action","other",array('categorie'=> "appli",'icon'=>"YoutubeKids.png",'commande'=>"shell monkey -p com.google.android.youtube.tvkids -c android.intent.category.LAUNCHER 1"));
 
 		$sudo = exec("\$EUID");
 		if ($sudo != "0")
