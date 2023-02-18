@@ -199,7 +199,7 @@ class AndroidTV extends eqLogic{
 		$this->addCmd("chaine-","action","other",array('categorie'=> "commande",'commande'=>"shell input keyevent 167"));
 		$this->addCmd("mute","action","other",array('categorie'=> "commande",'commande'=>"shell input keyevent 164"));
 		$this->addCmd("reboot","action","other",array('categorie'=> "commande",'commande'=>"shell reboot"));
-		$volume=$this->addCmd('volume','info','numeric',array('categorie'=> 'info'),'%');
+		$this->addCmd('volume','info','numeric',array('categorie'=> 'info'),'%');
 	  	$this->addCmd("setVolume","action","slider",array("categorie"=> "commande",'commande'=>""),'',$volume->getId());
 	  	////////////////////////////////////////////////////////////  Commandes action    ////////////////////////////////////////////////////////////////////
 	  	////////////////////////////////////////////////////////////  Commandes HDMI      ////////////////////////////////////////////////////////////////////
@@ -292,8 +292,8 @@ class AndroidTV extends eqLogic{
 		log::add('AndroidTV', 'debug',$this->getHumanName() . " disk_total: " .$infos['disk_total']);
 		$infos['title'] = substr($this->runcmd("shell dumpsys media_session | grep -A 11 '".$infos['encours']."' | grep 'metadata' | cut -d '=' -f3 | cut -d ',' -f1 | grep -Ev '^null$'"), 0);
 		log::add('AndroidTV', 'debug', $this->getHumanName() . " title: " .$infos['title']);
-		$infos['volume_status'] = $this->runcmd("shell dumpsys audio | grep streamVolume | tail -1 | cut -d':' -f2");
-		//$infos['volume_status'] = substr($this->runcmd("shell media volume --stream 3 --get | grep volume |grep is | cut -d' ' -f4"), 0, -1);
+		//$infos['volume_status'] = $this->runcmd("shell dumpsys audio | grep streamVolume | tail -1 | cut -d':' -f2");
+		$infos['volume'] = substr($this->runcmd("shell media volume --stream 3 --get | grep volume |grep is | cut -d' ' -f4"), 0, -1);
 		log::add('AndroidTV', 'debug',$this->getHumanName() . " volume: " .$infos['volume_status']);	
 		//$infos['play_state'] = substr($this->runcmd(" shell dumpsys media_session | grep -m 1 ‹ state=PlaybackState {state= › | cut -d, -f1 | cut -c34- "), 0,-1);
 		$infos['play_state'] = trim($this->runcmd(" shell dumpsys media_session | grep state=PlaybackState | cut -d'{' -f2| grep state | cut -d'=' -f2 | cut -d',' -f1"));
