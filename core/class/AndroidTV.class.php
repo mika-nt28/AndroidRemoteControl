@@ -130,9 +130,14 @@ class AndroidTV extends eqLogic{
 				$ip_address = $_ip_address;
 			else
 				$ip_address = $this->getConfiguration('ip_address');
-			log::add('AndroidTV', 'debug', $this->getHumanName(). ' Déconnection préventive du périphérique '.$ip_address.' encours');
+			if ($this!=null ||$this!="")
+				$AndroidtvName = $this->getHumanName();
+			else 
+				$AndroidtvName = "Nouveau Périphérique";
+
+			log::add('AndroidTV', 'debug', $AndroidtvName. ' Déconnection préventive du périphérique '.$ip_address.' encours');
 			shell_exec($sudo_prefix . "adb connect ".$ip_address.":5555");
-			log::add('AndroidTV', 'debug', $this->getHumanName(). ' Connection au périphérique '.$ip_address.' encours');
+			log::add('AndroidTV', 'debug', $AndroidtvName. ' Connection au périphérique '.$ip_address.' encours');
 			shell_exec($sudo_prefix . "adb connect ".$ip_address.":5555");
 		} catch (Exception $e) {
     			log::add('AndroidTV','error','Exception reçue : ',  $e->getMessage());
@@ -415,20 +420,21 @@ class AndroidTV extends eqLogic{
 				$cmd->setDisplay('icon', 'plugins/AndroidTV/desktop/images/erreur.png');
 				$cmd->save();
 				$this->connectADB($ip_address);
-				//return false;
+				return false;
 			} elseif (!strstr($check, "device")) {
 				$cmd = $this->getCmd(null, 'encours');
 				$cmd->setDisplay('icon', 'plugins/AndroidTV/desktop/images/erreur.png');
 				$cmd->save();
 				log::add('AndroidTV', 'info', $this->getHumanName() . ' Votre appareil n\'est pas détecté par ADB ou en veille profonde.');
 				$this->connectADB($ip_address);
-				//return false;
+				return false;
 			} elseif (strstr($check, "unauthorized")) {
 				$cmd = $this->getCmd(null, 'encours');
 				$cmd->setDisplay('icon', 'plugins/AndroidTV/desktop/images/erreur.png');
 				$cmd->save();
 				log::add('AndroidTV', 'info',$this->getHumanName() . ' Votre connection n\'est pas autorisé');
 				$this->connectADB($ip_address);
+				return false;
 			}
 		} catch (Exception $e) {
     			log::add('AndroidTV','error','Exception reçue : ',  $e->getMessage());
@@ -518,7 +524,7 @@ class AndroidTVCmd extends cmd{
 		}
 		try{
 			log::add('AndroidTV', 'info',$this->getHumanName() . ' Command "' . $commande . '" sent to android device at ip address : ' . $ip_address);
-			shell_exec($sudo_prefix . "adb -s ".$ip_address.":5555 " . $commande);
+			shell_exec($sudo_prefix . "adb -s ".$ip_address.":5555 " . $commande. "&& sleep 5");
 			$ARC->updateInfo();
 		} catch (Exception $e) {
     			log::add('AndroidTV','error','Exception reçue : ',  $e->getMessage());
