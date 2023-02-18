@@ -359,8 +359,8 @@ class AndroidTV extends eqLogic{
 			$this->checkAndUpdateCmd('disk_total', $infos['disk_total']);
 		if (isset($infos['title'])) 
 			$this->checkAndUpdateCmd('title', $infos['title']);
-		if (isset($infos['volume_status']))
-			$this->checkAndUpdateCmd('volume_status', $infos['volume_status']);
+		if (isset($infos['volume']))
+			$this->checkAndUpdateCmd('volume', $infos['volume']);
 		if (isset($infos['play_state'])) {
 			switch($infos['play_state'] ){
 				case 2:
