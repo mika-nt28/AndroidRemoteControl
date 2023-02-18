@@ -126,10 +126,11 @@ class AndroidTV extends eqLogic{
 			$sudo = exec("\$EUID");
 			if ($sudo != "0") 
 				$sudo_prefix = "sudo ";
-			if (isset($_ip_address)) 
+			if (isset($_ip_address)) {
 				$ip_address = $_ip_address;
 				log::add('AndroidTV', 'debug', ' Connection au nouveau périphérique '.$ip_address.' encours');
 				shell_exec($sudo_prefix . "adb connect ".$ip_address.":5555");
+			}
 			else {
 				$ip_address = $this->getConfiguration('ip_address');
 				log::add('AndroidTV', 'debug', $this->getHumanName(). ' Déconnection préventive du périphérique '.$ip_address.' encours');
