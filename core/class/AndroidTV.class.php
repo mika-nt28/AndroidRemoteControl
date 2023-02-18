@@ -503,11 +503,15 @@ class AndroidTVCmd extends cmd{
 		$ip_address = $ARC->getConfiguration('ip_address');
 		$mac_address = $ARC->getConfiguration('mac_address');
 		$commande = $this->getConfiguration('commande');
+		$delais = 0;
 		switch ($this->getLogicalId()){
 			case 'On':
-				$action = shell_exec($sudo_prefix . " wakeonlan " . $mac_address. " -i " . $ip_address . " && sleep 20");				
-				log::add('AndroidTV', 'info',$this->getHumanName() . ' wakeonlan ' . $mac_address. ' : ' . $action );
-
+				/*$action = shell_exec($sudo_prefix . " wakeonlan " . $mac_address. " -i " . $ip_address . " && sleep 20");				
+				log::add('AndroidTV', 'info',$this->getHumanName() . ' wakeonlan ' . $mac_address. ' : ' . $action );*/
+				$delais = 10;
+			break;
+			case 'Off':
+				$delais = 10;
 			break;
 			case 'setVolume':
 				$commande = "shell media volume --stream 3  --set " . $_options['slider'];
@@ -524,7 +528,11 @@ class AndroidTVCmd extends cmd{
 		}
 		try{
 			log::add('AndroidTV', 'info',$this->getHumanName() . ' Command "' . $commande . '" sent to android device at ip address : ' . $ip_address);
-			shell_exec($sudo_prefix . "adb -s ".$ip_address.":5555 " . $commande. "&& sleep 5");
+			if ($delais!=0)
+				shell_exec($sudo_prefix . "adb -s ".$ip_address.":5555 " . $commande . "&& sleep ".$delais);
+			else {
+				shell_exec($sudo_prefix . "adb -s ".$ip_address.":5555 " . $commande);
+			}
 			$ARC->updateInfo();
 		} catch (Exception $e) {
     			log::add('AndroidTV','error','Exception reçue : ',  $e->getMessage());
