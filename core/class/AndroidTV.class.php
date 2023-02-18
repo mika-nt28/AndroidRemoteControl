@@ -128,17 +128,16 @@ class AndroidTV extends eqLogic{
 				$sudo_prefix = "sudo ";
 			if (isset($_ip_address)) 
 				$ip_address = $_ip_address;
-			else
+				log::add('AndroidTV', 'debug', ' Connection au nouveau périphérique '.$ip_address.' encours');
+				shell_exec($sudo_prefix . "adb connect ".$ip_address.":5555");
+			else {
 				$ip_address = $this->getConfiguration('ip_address');
-			if ($this!=null ||$this!="")
-				$AndroidtvName = $this->getHumanName();
-			else 
-				$AndroidtvName = "Nouveau Périphérique";
-
-			log::add('AndroidTV', 'debug', $AndroidtvName. ' Déconnection préventive du périphérique '.$ip_address.' encours');
-			shell_exec($sudo_prefix . "adb connect ".$ip_address.":5555");
-			log::add('AndroidTV', 'debug', $AndroidtvName. ' Connection au périphérique '.$ip_address.' encours');
-			shell_exec($sudo_prefix . "adb connect ".$ip_address.":5555");
+				log::add('AndroidTV', 'debug', $this->getHumanName(). ' Déconnection préventive du périphérique '.$ip_address.' encours');
+				shell_exec($sudo_prefix . "adb connect ".$ip_address.":5555");
+				log::add('AndroidTV', 'debug', $this->getHumanName(). ' Connection au périphérique '.$ip_address.' encours');
+				shell_exec($sudo_prefix . "adb connect ".$ip_address.":5555");
+			}
+			
 		} catch (Exception $e) {
     			log::add('AndroidTV','error','Exception reçue : ',  $e->getMessage());
 		}
