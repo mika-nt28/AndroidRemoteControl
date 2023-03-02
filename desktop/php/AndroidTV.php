@@ -225,7 +225,7 @@
 				<table id="table_info" class="table table-bordered table-condensed">
 					<thead>
 						<tr>
-							<th>{{Nom}}</th><th>{{Type}}</th><th>{{Afficher}}</th><th>{{Action}}</th>
+							<th>{{Nom}}</th><th>{{Type}}</th><th>{{Etat}}</th><th>{{Action}}</th>
 						</tr>
 					</thead>
 					<tbody></tbody>

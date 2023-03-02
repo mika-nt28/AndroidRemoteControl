@@ -126,14 +126,19 @@ class AndroidTV extends eqLogic{
 			$sudo = exec("\$EUID");
 			if ($sudo != "0") 
 				$sudo_prefix = "sudo ";
-			if (isset($_ip_address)) 
+			if (isset($_ip_address)) {
 				$ip_address = $_ip_address;
-			else
+				log::add('AndroidTV', 'debug', ' Connection au nouveau périphérique '.$ip_address.' encours');
+				shell_exec($sudo_prefix . "adb connect ".$ip_address.":5555");
+			}
+			else {
 				$ip_address = $this->getConfiguration('ip_address');
-			log::add('AndroidTV', 'debug', $this->getHumanName(). ' Déconnection préventive du périphérique '.$ip_address.' encours');
-			shell_exec($sudo_prefix . "adb connect ".$ip_address.":5555");
-			log::add('AndroidTV', 'debug', $this->getHumanName(). ' Connection au périphérique '.$ip_address.' encours');
-			shell_exec($sudo_prefix . "adb connect ".$ip_address.":5555");
+				log::add('AndroidTV', 'debug', $this->getHumanName(). ' Déconnection préventive du périphérique '.$ip_address.' encours');
+				shell_exec($sudo_prefix . "adb connect ".$ip_address.":5555");
+				log::add('AndroidTV', 'debug', $this->getHumanName(). ' Connection au périphérique '.$ip_address.' encours');
+				shell_exec($sudo_prefix . "adb connect ".$ip_address.":5555");
+			}
+			
 		} catch (Exception $e) {
     			log::add('AndroidTV','error','Exception reçue : ',  $e->getMessage());
 		}
@@ -194,7 +199,7 @@ class AndroidTV extends eqLogic{
 		$this->addCmd("chaine-","action","other",array('categorie'=> "commande",'commande'=>"shell input keyevent 167"));
 		$this->addCmd("mute","action","other",array('categorie'=> "commande",'commande'=>"shell input keyevent 164"));
 		$this->addCmd("reboot","action","other",array('categorie'=> "commande",'commande'=>"shell reboot"));
-		$volume=$this->addCmd('volume','info','numeric',array('categorie'=> 'info'),'%');
+		$this->addCmd('volume','info','numeric',array('categorie'=> 'info'),'%');
 	  	$this->addCmd("setVolume","action","slider",array("categorie"=> "commande",'commande'=>""),'',$volume->getId());
 	  	////////////////////////////////////////////////////////////  Commandes action    ////////////////////////////////////////////////////////////////////
 	  	////////////////////////////////////////////////////////////  Commandes HDMI      ////////////////////////////////////////////////////////////////////
@@ -287,9 +292,9 @@ class AndroidTV extends eqLogic{
 		log::add('AndroidTV', 'debug',$this->getHumanName() . " disk_total: " .$infos['disk_total']);
 		$infos['title'] = substr($this->runcmd("shell dumpsys media_session | grep -A 11 '".$infos['encours']."' | grep 'metadata' | cut -d '=' -f3 | cut -d ',' -f1 | grep -Ev '^null$'"), 0);
 		log::add('AndroidTV', 'debug', $this->getHumanName() . " title: " .$infos['title']);
-		$infos['volume_status'] = $this->runcmd("shell dumpsys audio | grep streamVolume | tail -1 | cut -d':' -f2");
-		//$infos['volume_status'] = substr($this->runcmd("shell media volume --stream 3 --get | grep volume |grep is | cut -d' ' -f4"), 0, -1);
-		log::add('AndroidTV', 'debug',$this->getHumanName() . " volume: " .$infos['volume_status']);	
+		$infos['volume'] = $this->runcmd("shell dumpsys audio | grep streamVolume | tail -1 | cut -d':' -f2");
+		//$infos['volume'] = substr($this->runcmd("shell media volume --stream 3 --get | grep volume |grep is | cut -d' ' -f4"), 0, -1);
+		log::add('AndroidTV', 'debug',$this->getHumanName() . " volume: " .$infos['volume']);	
 		//$infos['play_state'] = substr($this->runcmd(" shell dumpsys media_session | grep -m 1 ‹ state=PlaybackState {state= › | cut -d, -f1 | cut -c34- "), 0,-1);
 		$infos['play_state'] = trim($this->runcmd(" shell dumpsys media_session | grep state=PlaybackState | cut -d'{' -f2| grep state | cut -d'=' -f2 | cut -d',' -f1"));
 		log::add('AndroidTV', 'debug',  $this->getHumanName() . " play_state: " .$infos['play_state'] );
@@ -354,8 +359,8 @@ class AndroidTV extends eqLogic{
 			$this->checkAndUpdateCmd('disk_total', $infos['disk_total']);
 		if (isset($infos['title'])) 
 			$this->checkAndUpdateCmd('title', $infos['title']);
-		if (isset($infos['volume_status']))
-			$this->checkAndUpdateCmd('volume_status', $infos['volume_status']);
+		if (isset($infos['volume']))
+			$this->checkAndUpdateCmd('volume', $infos['volume']);
 		if (isset($infos['play_state'])) {
 			switch($infos['play_state'] ){
 				case 2:
@@ -415,20 +420,21 @@ class AndroidTV extends eqLogic{
 				$cmd->setDisplay('icon', 'plugins/AndroidTV/desktop/images/erreur.png');
 				$cmd->save();
 				$this->connectADB($ip_address);
-				//return false;
+				return false;
 			} elseif (!strstr($check, "device")) {
 				$cmd = $this->getCmd(null, 'encours');
 				$cmd->setDisplay('icon', 'plugins/AndroidTV/desktop/images/erreur.png');
 				$cmd->save();
 				log::add('AndroidTV', 'info', $this->getHumanName() . ' Votre appareil n\'est pas détecté par ADB ou en veille profonde.');
 				$this->connectADB($ip_address);
-				//return false;
+				return false;
 			} elseif (strstr($check, "unauthorized")) {
 				$cmd = $this->getCmd(null, 'encours');
 				$cmd->setDisplay('icon', 'plugins/AndroidTV/desktop/images/erreur.png');
 				$cmd->save();
 				log::add('AndroidTV', 'info',$this->getHumanName() . ' Votre connection n\'est pas autorisé');
 				$this->connectADB($ip_address);
+				return false;
 			}
 		} catch (Exception $e) {
     			log::add('AndroidTV','error','Exception reçue : ',  $e->getMessage());
@@ -497,11 +503,15 @@ class AndroidTVCmd extends cmd{
 		$ip_address = $ARC->getConfiguration('ip_address');
 		$mac_address = $ARC->getConfiguration('mac_address');
 		$commande = $this->getConfiguration('commande');
+		$delais = 0;
 		switch ($this->getLogicalId()){
 			case 'On':
-				$action = shell_exec($sudo_prefix . " wakeonlan " . $mac_address. " -i " . $ip_address . " && sleep 20");				
-				log::add('AndroidTV', 'info',$this->getHumanName() . ' wakeonlan ' . $mac_address. ' : ' . $action );
-
+				/*$action = shell_exec($sudo_prefix . " wakeonlan " . $mac_address. " -i " . $ip_address . " && sleep 20");				
+				log::add('AndroidTV', 'info',$this->getHumanName() . ' wakeonlan ' . $mac_address. ' : ' . $action );*/
+				$delais = 10;
+			break;
+			case 'Off':
+				$delais = 10;
 			break;
 			case 'setVolume':
 				$commande = "shell media volume --stream 3  --set " . $_options['slider'];
@@ -518,7 +528,11 @@ class AndroidTVCmd extends cmd{
 		}
 		try{
 			log::add('AndroidTV', 'info',$this->getHumanName() . ' Command "' . $commande . '" sent to android device at ip address : ' . $ip_address);
-			shell_exec($sudo_prefix . "adb -s ".$ip_address.":5555 " . $commande);
+			if ($delais!=0)
+				shell_exec($sudo_prefix . "adb -s ".$ip_address.":5555 " . $commande . "&& sleep ".$delais);
+			else {
+				shell_exec($sudo_prefix . "adb -s ".$ip_address.":5555 " . $commande);
+			}
 			$ARC->updateInfo();
 		} catch (Exception $e) {
     			log::add('AndroidTV','error','Exception reçue : ',  $e->getMessage());
