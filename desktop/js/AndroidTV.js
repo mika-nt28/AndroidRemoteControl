@@ -77,11 +77,7 @@ function addCmdToTable(_cmd) {
         tr += '<span class="subType" subType="' + init(_cmd.subType) + '"></span>';
         tr += '</td>';
        	tr += '<td>';
-       if (_cmd.type == "action") {
-        tr += '<input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="commande" style="width: 90%;display: inherit" ></input>';
-    } else {
-         tr += '<input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="commande" style="width: 90%;display: inherit" disabled></input>';
-       }
+        tr += '<span class="cmdAttr" data-l1key="htmlstate"></span>'; 
         tr += '</td>';
         tr += '<td style="width: 150px;">';
         tr += '<span><input type="checkbox" class="cmdAttr" data-size="mini" data-l1key="isVisible" checked/> {{Afficher}}<br/></span>';
