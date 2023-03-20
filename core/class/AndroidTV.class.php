@@ -419,6 +419,7 @@ class AndroidTV extends eqLogic{
 				log::add('AndroidTV', 'info',$this->getHumanName() . ' Votre appareil est offline');
 				$cmd->setDisplay('icon', 'plugins/AndroidTV/desktop/images/erreur.png');
 				$cmd->save();
+				$this->checkAndUpdateCmd('power_state', 0 );
 				$this->connectADB($ip_address);
 				return false;
 			} elseif (!strstr($check, "device")) {
@@ -426,6 +427,7 @@ class AndroidTV extends eqLogic{
 				$cmd->setDisplay('icon', 'plugins/AndroidTV/desktop/images/erreur.png');
 				$cmd->save();
 				log::add('AndroidTV', 'info', $this->getHumanName() . ' Votre appareil n\'est pas détecté par ADB ou en veille profonde.');
+				$this->checkAndUpdateCmd('power_state', 0 );
 				$this->connectADB($ip_address);
 				return false;
 			} elseif (strstr($check, "unauthorized")) {
@@ -433,6 +435,7 @@ class AndroidTV extends eqLogic{
 				$cmd->setDisplay('icon', 'plugins/AndroidTV/desktop/images/erreur.png');
 				$cmd->save();
 				log::add('AndroidTV', 'info',$this->getHumanName() . ' Votre connection n\'est pas autorisé');
+				$this->checkAndUpdateCmd('power_state', 0 );
 				$this->connectADB($ip_address);
 				return false;
 			}
