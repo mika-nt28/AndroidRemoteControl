@@ -200,7 +200,7 @@ class AndroidTV extends eqLogic{
 		$this->addCmd("mute","action","other",array('categorie'=> "commande",'commande'=>"shell input keyevent 164"));
 		$this->addCmd("reboot","action","other",array('categorie'=> "commande",'commande'=>"shell reboot"));
 		$volume = $this->addCmd('volume','info','numeric',array('categorie'=> 'info'),'%');
-	  	$this->addCmd('setVolume','action','slider',array('categorie"=> 'commande','commande'=>""),'',$volume->getId());
+	  	$this->addCmd('setVolume','action','slider',array('categorie'=> 'commande','commande'=>''),'',$volume->getId());
 	  	////////////////////////////////////////////////////////////  Commandes action    ////////////////////////////////////////////////////////////////////
 	  	////////////////////////////////////////////////////////////  Commandes HDMI      ////////////////////////////////////////////////////////////////////
 	  	$this->addCmd("HDMI1","action","other",array('categorie'=> "hdmi",'icon'=>"HDMI.png",'commande'=>"shell am start -a android.intent.action.VIEW -d content://android.media.tv/passthrough/com.mediatek.tvinput%2F.hdmi.HDMIInputService%2FHW5 -n org.droidtv.playtv/.PlayTvActivity -f 0x10000000"));
