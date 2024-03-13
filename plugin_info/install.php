@@ -8,6 +8,11 @@ function AndroidTV_install() {
 function AndroidTV_update() {
 }
 function AndroidTV_remove() {
+      foreach(eqLogic::byType('AndroidTV') as $AndroidTV){
+			$cron = cron::byClassAndFunction('AndroidTV', 'CheckAndroidTV', array('id' => $AndroidTV->getId()));
+			if(is_object($cron))	
+				$cron->remove();
+		}
     exec('../3rdparty/remove.sh');
 }
 
