@@ -22,7 +22,7 @@ class AndroidTV extends eqLogic{
 			#$AndroidTV->refreshWidget();
 		}
 	}
-	public static function dependancy_info()    {
+	/*public static function dependancy_info()    {
 		$return                  = array();
 		$return['log']           = 'AndroidTV_dep';
 		$return['progress_file'] = '/tmp/AndroidTV_dep';
@@ -35,7 +35,13 @@ class AndroidTV extends eqLogic{
 		}
 		return $return;
 	}
+	public static function dependancy_install(){
+		log::add('AndroidTV', 'info', 'Installation des dépéndances android-tools-adb');
+		$resource_path = realpath(__DIR__ . '/../../3rdparty');
+		passthru('/bin/bash ' . $resource_path . '/install.sh ' . $resource_path . ' > ' . log::getPathToLog('AndroidTV_dep') . ' 2>&1 &');
+	}*/
 	public static function deamon_info() {
+      //self::resetADB();
 		$return = array();
 		$return['log'] = 'AndroidTV';
 		$return['launchable'] = 'ok';
@@ -81,11 +87,6 @@ class AndroidTV extends eqLogic{
 			$cron->save();
 		}
 		$cron->start();
-	}
-	public static function dependancy_install(){
-		log::add('AndroidTV', 'info', 'Installation des dépéndances android-tools-adb');
-		$resource_path = realpath(__DIR__ . '/../../3rdparty');
-		passthru('/bin/bash ' . $resource_path . '/install.sh ' . $resource_path . ' > ' . log::getPathToLog('AndroidTV_dep') . ' 2>&1 &');
 	}
 	public function runcmd($_cmd) {
 		try{
