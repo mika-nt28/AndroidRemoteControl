@@ -46,6 +46,9 @@ class AndroidTV extends eqLogic{
 		$return['log'] = 'AndroidTV';
 		$return['launchable'] = 'ok';
 		$return['state'] = 'nok';
+		$check = shell_exec("sudo adb devices | sudo grep \"device\"");
+		if($check == "")
+			return $return;
 		foreach(eqLogic::byType('AndroidTV') as $AndroidTV){
 			if($AndroidTV->getIsEnable() ){
 				$cron = cron::byClassAndFunction('AndroidTV', 'CheckAndroidTV', array('id' => $AndroidTV->getId()));
@@ -64,6 +67,7 @@ class AndroidTV extends eqLogic{
 			return;
 		if ($deamon_info['state'] == 'ok') 
 			return;
+		self::resetADB();
 		foreach(eqLogic::byType('AndroidTV') as $AndroidTV)
 			$AndroidTV->createDeamon();
 	}
@@ -127,24 +131,34 @@ class AndroidTV extends eqLogic{
 			$sudo = exec("\$EUID");
 			if ($sudo != "0") 
 				$sudo_prefix = "sudo ";
-			if (isset($_ip_address)) {
+			if (isset($_ip_address)) 
 				$ip_address = $_ip_address;
-				log::add('AndroidTV', 'debug', ' Connection au nouveau périphérique '.$ip_address.' encours');
-				shell_exec($sudo_prefix . "adb connect ".$ip_address.":5555");
-			}
-			else {
+			else 
 				$ip_address = $this->getConfiguration('ip_address');
-				log::add('AndroidTV', 'debug', $this->getHumanName(). ' Déconnection préventive du périphérique '.$ip_address.' encours');
-				shell_exec($sudo_prefix . "adb connect ".$ip_address.":5555");
-				log::add('AndroidTV', 'debug', $this->getHumanName(). ' Connection au périphérique '.$ip_address.' encours');
-				shell_exec($sudo_prefix . "adb connect ".$ip_address.":5555");
-			}
+			log::add('AndroidTV', 'debug', $this->getHumanName(). ' Connection au périphérique '.$ip_address.' encours');
+			shell_exec($sudo_prefix . "adb connect ".$ip_address.":5555");
 			
 		} catch (Exception $e) {
     			log::add('AndroidTV','error','Exception reçue : ',  $e->getMessage());
 		}
 	}
-	public function addCmd($name,$type='action',$subtype='other',$configuration='',$unite='',$value=''){
+	public function disconnectADB($_ip_address = null) {
+		try{
+			$sudo = exec("\$EUID");
+			if ($sudo != "0") 
+				$sudo_prefix = "sudo ";
+			if (isset($_ip_address)) 
+				$ip_address = $_ip_address;
+			else 
+				$ip_address = $this->getConfiguration('ip_address');
+			log::add('AndroidTV', 'debug', $this->getHumanName(). ' Deconnexion au périphérique '.$ip_address.' encours');
+			shell_exec($sudo_prefix . "adb disconnect ".$ip_address.":5555");
+			
+		} catch (Exception $e) {
+    			log::add('AndroidTV','error','Exception reçue : ',  $e->getMessage());
+		}
+	}
+ 	public function addCmd($name,$type='action',$subtype='other',$configuration='',$unite='',$value=''){
 		$cmd = $this->getCmd(null, $name);
 		if (!is_object($cmd)) {
 			$cmd = new AndroidTVCmd();
@@ -265,14 +279,15 @@ class AndroidTV extends eqLogic{
 		throw new \Exception(__('L\'adresse IP doit être renseignée', __FILE__));
 	}
 	public function getInfo(){
-		if($this->checkAndroidTVStatus() === false)
-			return false;
+	//	if($this->checkAndroidTVStatus() === false)
+		//	return false;
 		$sudo = exec("\$EUID");
 		if ($sudo != "0")
 			$sudo_prefix = "sudo ";
 		$ip_address = $this->getConfiguration('ip_address');
 		$mac_address = $this->getConfiguration('mac_address');
 	
+		$this->connectADB($ip_address);
 		$infos['power_state'] = substr($this->runcmd("shell dumpsys power -h | grep \"Display Power\" | cut -c22-"), 0, -1);
 		log::add('AndroidTV', 'debug', $this->getHumanName() . " power_state: " . $infos['power_state']);
 		$infos['encours']     = substr($this->runcmd("shell dumpsys activity activities | grep mResumedActivity | cut -d / -f1 | cut -d ' ' -f8"), 0, -1);
@@ -303,6 +318,8 @@ class AndroidTV extends eqLogic{
 		log::add('AndroidTV', 'debug', $this->getHumanName() . " battery_level: " .$infos['battery_level']);
 		$infos['battery_status']  = substr($this->runcmd("shell dumpsys battery | grep status"), -3);
 		log::add('AndroidTV', 'debug', $this->getHumanName() . " battery_status: " .$infos['battery_status']);
+      
+		$this->disconnectADB($ip_address);
 		return $infos;
 	}
 	public function updateInfo(){
@@ -421,7 +438,6 @@ class AndroidTV extends eqLogic{
 				$cmd->setDisplay('icon', 'plugins/AndroidTV/desktop/images/erreur.png');
 				$cmd->save();
 				$this->checkAndUpdateCmd('power_state', 0 );
-				$this->connectADB($ip_address);
 				return false;
 			} elseif (!strstr($check, "device")) {
 				$cmd = $this->getCmd(null, 'encours');
@@ -429,7 +445,6 @@ class AndroidTV extends eqLogic{
 				$cmd->save();
 				log::add('AndroidTV', 'info', $this->getHumanName() . ' Votre appareil n\'est pas détecté par ADB ou en veille profonde.');
 				$this->checkAndUpdateCmd('power_state', 0 );
-				$this->connectADB($ip_address);
 				return false;
 			} elseif (strstr($check, "unauthorized")) {
 				$cmd = $this->getCmd(null, 'encours');
@@ -437,7 +452,6 @@ class AndroidTV extends eqLogic{
 				$cmd->save();
 				log::add('AndroidTV', 'info',$this->getHumanName() . ' Votre connection n\'est pas autorisé');
 				$this->checkAndUpdateCmd('power_state', 0 );
-				$this->connectADB($ip_address);
 				return false;
 			}
 		} catch (Exception $e) {
@@ -508,6 +522,7 @@ class AndroidTVCmd extends cmd{
 		$mac_address = $ARC->getConfiguration('mac_address');
 		$commande = $this->getConfiguration('commande');
 		$delais = 0;
+		$ARC->connectADB($ip_address);
 		switch ($this->getLogicalId()){
 			case 'On':
 				/*$action = shell_exec($sudo_prefix . " wakeonlan " . $mac_address. " -i " . $ip_address . " && sleep 20");				
@@ -541,5 +556,7 @@ class AndroidTVCmd extends cmd{
 		} catch (Exception $e) {
     			log::add('AndroidTV','error','Exception reçue : ',  $e->getMessage());
 		}
+      
+		$ARC->disconnectADB($ip_address);
 	}
 }
