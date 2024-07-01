@@ -83,7 +83,7 @@ class AndroidTV extends eqLogic{
 			$cron->setOption(array('id' => $this->getId()));
 			$cron->setEnable(1);
 			$cron->setTimeout('1');
-			$cron->setSchedule('* * * * * *');
+			$cron->setSchedule('* * * * *');
 			$cron->save();
 		}
 		$cron->start();
